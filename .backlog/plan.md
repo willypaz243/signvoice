@@ -20,6 +20,9 @@
 7. **Regla de borrar**: un módulo, config o dependencia que no consume la demo, se elimina.
 8. **Límites medibles**: `src/` con **≤ 8 módulos**; **cada archivo de código, 100 líneas o menos**
    (se parte el archivo, nunca se sube el límite); cada commit con `ruff check` y `pytest` en verde.
+9. **El código se escribe en inglés**: identificadores, comentarios, docstrings, logs, mensajes de
+   error y nombres de tests. **El español es solo para lo que ve u oye el usuario**: la frase
+   traducida, los textos de la interfaz, el texto TTS, los valores del glosario y el informe.
 
 ## Fuera de alcance (explícito, para no discutirlo a mitad del semestre)
 
@@ -120,4 +123,5 @@ submuestreo **y** GPU+CUDA con versiones fijadas para el entrenamiento final · 
 `src/` + ruff/pytest** · **Gradio + `pyttsx3`** · post‑proceso **diccionario + plantillas** ·
 **offline** e **instalable** · **cuentas con roles en servidor** (última fase) · **idioma como
 dato** · informe de V. Ingeniería **2 000‑2 500 palabras** · informe 1: **un MD → .docx (Google
-Docs) → PDF** · **2 personas** programando.
+Docs) → PDF** · **2 personas** programando · **código en inglés; español solo en datos que se
+muestran al usuario** · **100 líneas o menos por archivo**.

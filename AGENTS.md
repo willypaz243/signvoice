@@ -46,8 +46,11 @@ MediaPipe **Tasks** Pose + Hands (archivos `.task` locales) · dataset **Espejel
   **llama**, no la reescribe: el núcleo de ML no importa HTTP, sesiones ni base de datos.
 - **El idioma es dato, no código:** `config.yaml` + `glossary/<lengua>.yaml`. Sin `if lengua == …`
   dentro de la lógica.
-- Identificadores en inglés; términos de dominio LSM en español (`glosa`, `señante`) en comentarios,
-  docstrings y documentación.
+- **El código se escribe en inglés**: identificadores, comentarios, docstrings, logs, mensajes de
+  error y nombres de tests. **El español solo aparece en datos que se muestran al usuario**: la
+  frase traducida, los textos de la interfaz, el texto TTS y los valores de `glossary/LSM.yaml`.
+  Los términos de dominio LSM (`glosa`, `señante`) se explican en inglés en los docstrings y viven
+  en español solo en la documentación (`docs/`, informe).
 
 ## Estructura
 

@@ -1,4 +1,4 @@
-# Reconocimiento de señas y conversión a voz
+# SignVoice — Reconocimiento de señas y conversión a voz
 
 ### Traductor asistido por visión por computadora y aprendizaje supervisado para la Lengua de Señas Mexicana
 
@@ -12,8 +12,8 @@
 >
 > **Asignatura:** Práctica de Inteligencia Artificial
 >
-> **Título del proyecto:** Reconocimiento de señas y conversión a voz: traductor asistido por
-> visión por computadora y aprendizaje supervisado para la Lengua de Señas Mexicana
+> **Título del proyecto:** SignVoice — Reconocimiento de señas y conversión a voz: traductor
+> asistido por visión por computadora y aprendizaje supervisado para la Lengua de Señas Mexicana
 >
 > **Grupo / Equipo:** Grupo 11
 >

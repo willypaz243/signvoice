@@ -1,4 +1,4 @@
-# Plan de desarrollo — Traductor LSM → voz (Grupo 11)
+# Plan de desarrollo — SignVoice · Traductor LSM → voz (Grupo 11)
 
 > Complementa a `backlog.md`. Fechas reales, qué se entrega en cada una, y los límites que evitan
 > sobreingeniería y código espagueti.

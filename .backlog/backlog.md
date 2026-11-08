@@ -1,4 +1,4 @@
-# Backlog — Traductor LSM → voz (Grupo 11)
+# Backlog — SignVoice · Traductor LSM → voz (Grupo 11)
 
 > Stories para el tracker. Este archivo guarda el contexto, la stack y las decisiones caras.
 > El plan con fechas y fases está en `plan.md`. La historia 01 está desarrollada en detalle en `stories/`.

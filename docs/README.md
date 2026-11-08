@@ -1,4 +1,4 @@
-# Documentación — Traductor de Lengua de Señas Mexicana (LSM) a voz
+# Documentación — SignVoice · Traductor de Lengua de Señas Mexicana (LSM) a voz
 
 **Práctica de Inteligencia Artificial — Grupo 11**
 Área: Aprendizaje supervisado · Subárea: Visión por computadora

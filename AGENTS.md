@@ -1,9 +1,12 @@
-# AGENTS.md — Traductor LSM → voz (Grupo 11)
+# AGENTS.md — SignVoice · Traductor LSM → voz (Grupo 11)
 
 Guía para agentes e integrantes que escriban código o documentos en este repositorio.
 El plan y las historias viven en `.backlog/` (`backlog.md`, `plan.md`, `stories/`).
 
 ## Contexto
+
+- **Nombre del proyecto: SignVoice** (repo `signvoice`). El nombre va en portada, README y
+  diagramas; el paquete Python es `g11` y no se renombra.
 
 - Práctica universitaria de IA: **reconocimiento de señas (LSM) y conversión a voz** con
   **aprendizaje supervisado + visión por computadora**.

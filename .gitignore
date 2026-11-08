@@ -1,0 +1,52 @@
+# --- Python ---
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+*.egg-info/
+build/
+dist/
+
+# --- Entorno y editores ---
+.env
+.ipynb_checkpoints/
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# --- Datos y artefactos pesados: no van al repositorio ---
+data/
+datasets/
+*.npz
+*.npy
+*.parquet
+*.mp4
+*.avi
+*.mov
+*.wav
+*.mp3
+runs/
+lightning_logs/
+wandb/
+checkpoints/
+*.pt
+*.pth
+*.onnx
+
+# Excepción: los modelos MediaPipe (.task) sí se versionan: la demo corre sin internet
+!models/*.task
+
+# --- Documentos de investigación: anexo de estudio, fuera del repositorio ---
+docs/investigacion/
+
+# --- Generados al exportar el informe (se regeneran desde el MD) ---
+docs/informe/export/
+*.pdf
+~$*
+
+# --- Índices locales ---
+graphify-out/

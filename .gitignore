@@ -46,6 +46,7 @@ docs/investigacion/
 # --- Generados al exportar el informe (se regeneran desde el MD) ---
 docs/informe/export/
 *.pdf
+*.docx
 ~$*
 
 # --- Índices locales ---

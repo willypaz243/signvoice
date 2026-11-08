@@ -188,7 +188,7 @@ Figura 1. Flujo del sistema propuesto.
 
 ```mermaid
 %%{init: {'theme':'dark','themeVariables':{'darkMode':true,'primaryTextColor':'#e6e6e6','nodeTextColor':'#e6e6e6','edgeLabelColor':'#e6e6e6','lineColor':'#9a9a9a'},'themeCSS':'.nodeLabel,.nodeText,.edgeLabel,.label{color:#e6e6e6!important}'}}%%
-flowchart LR
+flowchart TD
     A[Webcam] --> B[MediaPipe Tasks<br/>Postura y Manos]
     B --> C[Normalizacion<br/>al torso]
     C --> D[GRU de 2 capas<br/>con atencion]

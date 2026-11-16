@@ -9,10 +9,21 @@ CLIP = 2.0
 
 
 class Normalizer:
-    """Translate and scale landmark frames to a torso-relative frame."""
+    """Translate and scale landmark frames to a torso-relative frame.
+
+    The output does not depend on the person's position or distance to
+    the camera.
+    """
 
     def to_frames(self, sequence):
-        """Pad or truncate a (T, F, 3) sequence to a fixed 32-frame window."""
+        """Pad or truncate a sequence to the fixed 32-frame window.
+
+        Args:
+            sequence: Array of shape (T, F, 3) with the raw landmarks.
+
+        Returns:
+            Array of shape (32, F, 3); short inputs are padded with the last frame.
+        """
         frames = sequence.shape[0]
         if frames < FRAMES:
             tail = np.repeat(sequence[-1:], FRAMES - frames, axis=0)
@@ -20,7 +31,14 @@ class Normalizer:
         return sequence[:FRAMES]
 
     def torso_frame(self, points):
-        """Center and scale one (F, 3) frame using the shoulder line."""
+        """Center and scale one frame using the shoulder line.
+
+        Args:
+            points: Array of shape (F, 3) with one frame of landmarks.
+
+        Returns:
+            Array of shape (F, 3) in the torso frame; zeros when no torso is found.
+        """
         left, right = points[LEFT_SHOULDER], points[RIGHT_SHOULDER]
         width = float(np.linalg.norm(left - right))
         if width < 1e-6:
@@ -29,6 +47,13 @@ class Normalizer:
         return np.clip((points - center) / width, -CLIP, CLIP)
 
     def normalize(self, sequence):
-        """Normalize a (T, F, 3) landmark sequence to (32, F, 3)."""
+        """Normalize a landmark sequence to the model input shape.
+
+        Args:
+            sequence: Array of shape (T, F, 3) with the raw landmarks.
+
+        Returns:
+            Array of shape (32, F, 3) in the torso-relative frame.
+        """
         sequence = self.to_frames(np.asarray(sequence, dtype=np.float32))
         return np.stack([self.torso_frame(frame) for frame in sequence]).astype(np.float32)

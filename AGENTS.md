@@ -49,6 +49,10 @@ signs · `glossary.yaml` + **deterministic templates** for gloss→Spanish · `p
 - **Quality gate:** `ruff check` and `ty check` must pass on every commit. `ty` runs with a
   pragmatic configuration (`pyproject.toml`): consistent typing of the first-party code,
   without blocking on third-party libraries that ship no type stubs.
+- **Test docstrings:** every test has an English docstring explaining what it tests and why
+  it matters, so any developer can understand it.
+- **Core docstrings:** business-logic (core) classes and methods use **Google-style**
+  docstrings: one-line summary, then `Args:` and `Returns:` sections.
 - The core is a **`frames → glosses → phrase`** function. The API with accounts and roles
   (phase 4) **calls it**, it does not rewrite it: the ML core does not import HTTP,
   sessions, or a database.

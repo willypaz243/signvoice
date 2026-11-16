@@ -2,6 +2,8 @@
 
 > Complementa a `backlog.md`. Fechas reales, qué se entrega en cada una, y los límites que evitan
 > sobreingeniería y código espagueti.
+> **Entrega 2 (16/11 en adelante):** plan comprimido con calendario y reparto de 6 personas en
+> `plan-entrega2.md`.
 
 ## Reglas de alcance (no negociables)
 

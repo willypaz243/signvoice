@@ -21,3 +21,22 @@ def test_postprocess_builds_affirmative_phrase():
     only carry their dictionary words.
     """
     assert _builder().build(["hola", "amigo"]) == "Hola amigo."
+
+
+def test_postprocess_builds_question_phrase():
+    """The question marker must turn the phrase into a question.
+
+    When the gloss sequence contains the "pregunta" marker, the template
+    drops the marker from the words and ends the phrase with "?" instead
+    of a period.
+    """
+    assert _builder().build(["hola", "pregunta"]) == "Hola?"
+
+
+def test_postprocess_builds_politeness_phrase():
+    """A single courtesy gloss must become a complete phrase.
+
+    Short phrases like "gracias" are common in the demo; the template
+    must capitalize and close them without adding invented words.
+    """
+    assert _builder().build(["gracias"]) == "Gracias."

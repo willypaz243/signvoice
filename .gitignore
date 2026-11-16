@@ -39,6 +39,7 @@ checkpoints/
 *.pt
 *.pth
 *.onnx
+*.onnx.json
 
 # Excepción: los modelos MediaPipe (.task) sí se versionan: la demo corre sin internet
 !models/*.task

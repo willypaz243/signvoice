@@ -70,7 +70,8 @@ signs · `glossary.yaml` + **deterministic templates** for gloss→Spanish · `p
 src/g11/  capture.py  landmarks.py  normalize.py  model.py  train.py
           postprocess.py  glossary.py  app.py
 glossary/ LSM.yaml
-models/   pose_landmarker.task  hand_landmarker.task   (versioned: offline demo)
+models/   (downloaded, gitignored; see scripts/download_models.py)
+scripts/  download_models.py
 tests/    test_normalize.py  test_postprocess.py  test_glossary.py
 ```
 
@@ -82,6 +83,7 @@ file: if a module grows beyond 60 lines, it is split (`model_gru.py`,
 
 ```bash
 uv sync --all-groups
+python scripts/download_models.py   # one-time: piper voice + MediaPipe .task
 ruff check .
 ty check .
 pytest -q

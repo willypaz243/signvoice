@@ -3,6 +3,7 @@ name = "signvoice"
 version = "0.1.0"
 description = "SignVoice: LSM sign recognition converted to speech (Group 11)"
 requires-python = ">=3.11"
+license = { text = "MIT" }
 dependencies = [
     "numpy>=2,<3",
     "torch>=2.6",

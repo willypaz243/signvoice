@@ -1,47 +1,55 @@
-# Story 01 — Esqueleto de cámara a voz (walking skeleton)
+# Story 01 — Setup completo y esqueleto de cámara a voz (walking skeleton)
 
 **Estado:** en curso · **Entrega 2** (hackathon 16/11) · **T1** (A + F, con el asistente de IA)
 
 ## Story
 
-Como señante, quiero señalar una seña frente a la webcam y **escuchar una frase en voz alta**,
-aunque la predicción sea simulada, para verificar que el trayecto
-cámara → landmarks → glosa → español → voz funciona de punta a punta.
+Como desarrollador, quiero clonar el repositorio y tener el entorno completo
+(Python 3.11, librerías fijadas) y el esqueleto de punta a punta corriendo, para que
+cualquier integrante del equipo pueda empezar a contribuir sin instalar nada a mano.
 
 ## Acceptance criteria
 
-- [ ] Given corro `python -m g11 demo` (o abro Gradio), when la ventana se abre, then veo mi cámara
-      y un panel con: glosa predicha, frase en español y botón/autoplay de voz.
-- [ ] Given estoy frente a la cámara, when mantengo una seña 2 s, then el sistema extrae landmarks
-      reales de MediaPipe (Pose + Hands) y muestra el conteo de puntos detectados (no ceros).
-- [ ] Given que el modelo todavía no existe, when se llena una ventana de 32 frames, then se aplica
-      la **predicción simulada** (`simulate.py`: la glosa de mayor confianza de una lista fija o la
-      glosa indicada por el botón del vocabulario) y el panel lo indica como `simulado`.
-- [ ] Given una secuencia de 2‑3 glosas simuladas, when termino la señal, then veo la frase en
-      español producida por `diccionario + plantillas` y escucho la voz con `pyttsx3`.
-- [ ] Given sin internet, when corro la demo, then funciona (modelos `.task` locales, voz del sistema).
-- [ ] Given `ruff check` y `pytest`, when los ejecuto, then pasan (pruebas de `normalize`,
-      `postprocess` y `glossary`; `pytest` no requiere cámara).
+- [ ] Given clono el repo y corro el setup y el comando de demo, when la página se
+      abre, then veo mi webcam y un panel con la glosa predicha (marcada como
+      simulada), la frase en español y la reproducción de voz.
+- [ ] Given estoy frente a la cámara, when mantengo una seña 2 s, then el panel
+      muestra un conteo de landmarks detectados distinto de cero y la frase se lee
+      en voz alta.
+- [ ] Given la máquina no tiene internet, when corro la demo, then funciona
+      (modelos locales y voz del sistema).
+
+## Reglas de esta story
+
+- **Código 100 % en inglés** (identificadores, docstrings, logs, errores, tests); el
+  español solo en los datos que ve u oye el usuario (frase, textos de interfaz, TTS,
+  valores del glosario).
+- **Programación orientada a objetos:** una clase concreta por preocupación, **sin
+  herencia, sin clases base, sin factories ni inyección de dependencias**.
+- **Cada función de 9 líneas o menos; cada archivo de 60 líneas o menos.** Si se pasa,
+  se parte el archivo (nunca se sube el límite).
 
 ## Plan
 
-1. `git init` + `.gitignore` (`data/`, `*.npz`, `.venv`, `__pycache__`, `graphify-out/`) + `README.md`
-   (qué es, cómo se corre, 3 comandos).
-2. `pyproject.toml`: `torch` (CPU por defecto), `mediapipe`, `gradio`, `pyttsx3`, `typer`, `numpy`,
-   `pyyaml`, `opencv-python`, `matplotlib`. Python 3.11. Entorno con **uv**: `uv python install 3.11` + `uv venv` + `uv sync`
-    (lockfile `uv.lock` versionado; la story 9 de instalación limpia lo hereda).
-3. `src/g11/` con **6 módulos, sin clases base**:
-   `capture` (cámara → frames), `landmarks` (MediaPipe Tasks → `(T,F,3)`), `normalize`
-   (relativa al torso, reescalar z, `T=32`), `simulate` (predicción falsa), `postprocess`
-   (glosas → español con `glossary.yaml`), `app` (Gradio + `pyttsx3`).
-4. Contrato de datos fijo desde el día 1 (dict/`np.ndarray` con `meta{senante, glosa, sesion}`):
-   es lo que permite enchufar datos reales en la Fase 1 **sin reescribir** el `app`.
-5. `tests/test_normalize.py` (invariancia de traslación/escala) y `tests/test_postprocess.py`
-   (3 frases: afirmativa, pregunta, cortesía) con datos sintéticos.
-6. Verificar de punta a punta en la laptop: señal real → landmarks no ceros → frase → voz audible.
+1. Entorno Python 3.11 con **uv** (`uv python install 3.11` + `uv venv`), librerías
+   fijadas y lockfile `uv.lock` versionado; `ruff` y `pytest` como deps de desarrollo
+   (DoD global: verde en cada commit).
+2. Partir el trayecto completo (cámara → landmarks → glosa → frase → voz) en módulos
+   pequeños orientados a objetos. Guía inicial (se parte si un archivo supera 60
+   líneas): `capture`, `landmarks`, `normalize`, `simulate`, `postprocess`, `app`,
+   más `__init__` y `__main__` (CLI). El contrato de datos fijo —`(32, 75, 3)` +
+   `meta{senante, glosa, sesion}`— se mantiene desde el día 1 para enchufar datos
+   reales en la Fase 1 sin reescribir.
+3. Modelos MediaPipe locales (pose + manos, `.task` en `models/`): landmarks reales
+   de la webcam, normalizados al torso.
+4. Predicción de glosa simulada (lista fija), diccionario español de las glosas
+   piloto (`glossary/LSM.yaml`), plantillas deterministas y voz offline (`pyttsx3`).
+5. Interfaz web con un solo comando (webcam en el navegador) y el trayecto de punta
+   a punta funcionando sin internet.
 
 ## Out of scope
 
-Dataset Espejel, selección de glosas y splits (#2) · reconocimiento real (#3, #4, #5) · matriz de
-confusión (#7) · umbral de confianza (#8) · instalable en máquina limpia (#9) · config multi‑lengua (#10) ·
-servidor, cuentas y roles (#11) · informe V. Ingeniería (#12).
+- Dataset Espejel, selección de glosas y splits (story 02) · reconocimiento real
+  (stories 03‑05) · matriz de confusión (07) · umbral de confianza (08) ·
+  instalación en máquina limpia (09) · config multi‑lengua (10) · servidor con
+  cuentas (11) · informe V. Ingeniería (12).

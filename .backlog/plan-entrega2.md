@@ -22,10 +22,10 @@
 
 | Equipo | Quién | Qué hace hoy |
 |---|---|---|
-| **T1 · Esqueleto** | A + F (con el asistente de IA) | Entorno conda `signvoice` (py 3.11), `pyproject.toml`, `src/g11` (6 módulos ≤100 líneas), `.task` locales, tests, `demo` con simulación |
-| **T2 · Datos** | B + C | Descarga Espejel (hoy), **spike MediaPipe sobre 20 imágenes primero**, extracción de landmarks → `.npz` + `meta.json` + `splits.json` por señante |
-| **T3 · Modelo** | A (o B, cuando haya datos) | `model.py` + `train.py`, entrenamiento CPU con LOSO, top‑1, F1 macro, matriz de confusión (PNG) |
-| **T4 · Informe** | D + E | Redacción V. Ingeniería (2 000‑2 500 palabras), tablas con los conteos reales, figuras, capturas, `.docx` con genoffice, **impresión** |
+| **T1 · Esqueleto** | A + F (con el asistente de IA) | Entorno **uv** (py 3.11), `pyproject.toml` + `uv.lock`, `src/g11` (≤8 módulos, ≤100 líneas), `.task` locales, tests, `demo` con simulación · **story 01** |
+| **T2 · Datos** | B + C | Descarga Espejel (hoy), **spike MediaPipe sobre 20 imágenes primero**, extracción de landmarks → `.npz` + `meta.json` + `splits.json` por señante, glosario + plantillas · **stories 02 y 06** (03 si da tiempo) |
+| **T3 · Modelo** | A (o B, cuando haya datos) | `model.py` + `train.py`, entrenamiento CPU con LOSO, top‑1, F1 macro, matriz de confusión (PNG) · **stories 04 y 07** (05 si da tiempo) |
+| **T4 · Informe** | D + E | Redacción V. Ingeniería (2 000‑2 500 palabras), tablas con los conteos reales, figuras, capturas, `.docx` con genoffice, **impresión** · **story 12** |
 
 Contrato entre T1 y T2 (fijo desde ya, para no reescribir): `landmarks/clip_XXXX.npz` con
 `(T=32, F, 3)` + `meta.json` (`senante`, `glosa`, `sesion`) + `splits.json` por señante.

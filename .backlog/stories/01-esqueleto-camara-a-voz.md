@@ -1,6 +1,6 @@
 # Story 01 — Esqueleto de cámara a voz (walking skeleton)
 
-**Estado:** pendiente · **Fase 0** (8‑9 nov) · **Persona A** (con B en `glossary` y TTS)
+**Estado:** en curso · **Entrega 2** (hackathon 16/11) · **T1** (A + F, con el asistente de IA)
 
 ## Story
 
@@ -28,7 +28,8 @@ cámara → landmarks → glosa → español → voz funciona de punta a punta.
 1. `git init` + `.gitignore` (`data/`, `*.npz`, `.venv`, `__pycache__`, `graphify-out/`) + `README.md`
    (qué es, cómo se corre, 3 comandos).
 2. `pyproject.toml`: `torch` (CPU por defecto), `mediapipe`, `gradio`, `pyttsx3`, `typer`, `numpy`,
-   `pyyaml`, `pytest`, `ruff`. Python 3.11. `pip install -e .`.
+   `pyyaml`, `opencv-python`, `matplotlib`. Python 3.11. Entorno con **uv**: `uv python install 3.11` + `uv venv` + `uv sync`
+    (lockfile `uv.lock` versionado; la story 9 de instalación limpia lo hereda).
 3. `src/g11/` con **6 módulos, sin clases base**:
    `capture` (cámara → frames), `landmarks` (MediaPipe Tasks → `(T,F,3)`), `normalize`
    (relativa al torso, reescalar z, `T=32`), `simulate` (predicción falsa), `postprocess`

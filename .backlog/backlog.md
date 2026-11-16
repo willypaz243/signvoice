@@ -1,7 +1,8 @@
 # Backlog — SignVoice · Traductor LSM → voz (Grupo 11)
 
-> Stories para el tracker. Este archivo guarda el contexto, la stack y las decisiones caras.
-> El plan con fechas y fases está en `plan.md`. La historia 01 está desarrollada en detalle en `stories/`.
+> Stories para el tracker. Este archivo guarda el contexto, la stack, las decisiones caras
+> y el **estado actual** de cada historia. El plan con fases y el plan de la entrega 2 están
+> en `plan.md` y `plan-entrega2.md`. Las historias de la entrega 2 están detalladas en `stories/`.
 
 ## Context
 
@@ -63,6 +64,27 @@ encima se monta **FastAPI + SQLite + login con roles** sin tocar el núcleo de M
 - **Un solo dispositivo de captura** (webcam). Sin app móvil, sin sincronización, sin multi-tenant.
 
 ## Backlog
+
+### Estado — hackathon de la entrega 2 (16/11 → 17/11 12:45)
+
+Cronograma, equipos y riesgos en `plan-entrega2.md`. *Cursiva* = stretch (solo si sobra tiempo).
+
+| # | Historia | Entrega | Estado | Equipo | Ficha |
+|---|---|---|---|---|---|
+| 1 | Esqueleto cámara→voz (simulado) | 2 | **en curso** | T1 | `stories/01-esqueleto-camara-a-voz.md` |
+| 2 | Datos Espejel (spike + extracción + splits) | 2 | pendiente (arranca D1) | T2 | `stories/02-datos-espejel.md` |
+| *3* | *Una glosa real desde la webcam* | *2 (stretch)* | *pendiente* | *T2* | `stories/03-una-glosa-real.md` |
+| 4 | Entrenamiento GRU + métricas LOSO | 2 | pendiente (cuando haya datos) | T3 | `stories/04-entrenamiento-losos.md` |
+| *5* | *Las 10 glosas* | *2 (stretch) → 3* | *pendiente* | *T3* | `stories/05-diez-glosas.md` |
+| 6 | Frase en español (glosario + plantillas) | 2 | pendiente | T2 | `stories/06-frase-en-espanol.md` |
+| 7 | Matriz de confusión | 2 | pendiente (con la 4) | T3 | `stories/07-matriz-de-confusion.md` |
+| 8‑11 | Confianza, máquina limpia, multi‑lengua, servidor | 3 | aplazada | — | — |
+| 12 | Informe V. Ingeniería (docx + PDF) | 2 | pendiente (T4 redacta desde D1) | T4 | — |
+
+**Regla del hackathon:** cada historia cierra solo con `ruff check` + `pytest` en verde y un
+número o captura que entra al informe. Lo que no se entrena no se inventa en el informe.
+
+### Historias
 
 1. Como señante, quiero señalar una seña frente a la webcam y **escuchar una frase en voz alta**,
    aunque la predicción sea simulada, para verificar que el trayecto cámara→landmarks→glosa→español→voz

@@ -1,74 +1,60 @@
-# Plan de la entrega 2 — V. Ingeniería (comprimido)
+# Plan hackathon — entrega 2 (16/11 → 17/11 12:45)
 
-> Comprime las fases 0‑2 de `plan.md` en una línea de tiempo que arranca el **16/11/2026**.
-> Objetivo: informe impreso con **números reales** y repo que corre con 3 comandos.
-> Regla de la práctica: vale un experimento chico y honesto, no un sistema grande.
+> La entrega 2 es **mañana** a las 12:45. Un solo ciclo de trabajo: el objetivo no es el
+> sistema completo, sino un informe de V. Ingeniería con **números reales y honestos** y un
+> esqueleto que corre. Regla de oro: **lo que no se entrena hoy no se inventa en el informe**;
+> se etiqueta como "piloto" o "en curso" y se deja la planilla para la siguiente entrega.
 
-## Qué se entrega (historia 12)
+## Qué tiene que salir impreso
 
-- **V. Ingeniería** (2 000‑2 500 palabras): arquitectura, datos, método, métricas y
-  matriz de confusión, con figuras y tablas numeradas.
-- Código visible en GitHub: `pip install -e .`, `python -m g11 train`, `python -m g11 demo`.
-- Historias que se cierran: **1, 2, 4, 6, 7** (la 12 requiere la 4 y la 6); la **3** y la
-  **5** en la medida que den tiempo.
-- **Se aplazan a la entrega 3:** #8 (umbral de confianza), #9 (máquina limpia),
-  #10 (config multi‑lengua), #11 (servidor con cuentas). Si la 2 se entrega tarde, la #5
-  también se aplaza y el informe se cierra con las glosas que queden entrenadas.
+1. **Arquitectura**: la figura 1 (ya existe en PNG modo claro) + el esqueleto `src/g11`
+   corriendo con predicción simulada (`python -m g11 demo`).
+2. **Datos**: conteo **real** del subconjunto Espejel descargado hoy (glosas, imágenes,
+   señantes) + descripción del dataset y su licencia.
+3. **Método**: GRU 2 capas + atención, input `(B,32,F,3)`, AdamW, splits LOSO por señante,
+   semillas fijadas.
+4. **Métricas piloto**: si la extracción de landmarks funciona, entrenar con **3‑5 glosas y
+   2‑3 señantes** → top‑1, F1 macro y **matriz de confusión** (aunque salga bajo). Si no
+   funciona: resultado del spike (detección sobre N imágenes) + plan B, sin números falsos.
+5. **Plan de continuidad**: qué queda para la entrega 3 (10 glosas completas, stories 3‑11).
 
-## Camino crítico (lo más rápido hacia un número)
+## Equipos (6 personas)
 
-| Días | Pista A · pipeline/ML | Pista B · datos/producto |
+| Equipo | Quién | Qué hace hoy |
 |---|---|---|
-| D1 | Entorno conda `signvoice` (py 3.11) + esqueleto (story 01): `pyproject.toml`, `src/g11` (6 módulos), `simulate`, pytest | Espejel: descarga en Mendeley + conteo de imágenes por glosa → **lista de las 10 glosas** |
-| D1‑D2 | **Spike de riesgo (lo primero):** MediaPipe Pose+Hands sobre ~20 imágenes de Espejel (fondo/ropa negras) | Apoyo al conteo y curado de clips |
-| D2‑D4 | — | Landmarks del subconjunto → `landmarks/` (`.npz` por clip) + `meta.json` + `splits.json` **por señante** (story 2) |
-| D4‑D7 | Entrenamiento GRU+atención, **LOSO**, top‑1, F1 macro, **matriz de confusión** (stories 4 y 7) | `glossary/LSM.yaml` (10 glosas) + plantillas + pytest de glosa→frase (story 6) |
-| D8‑D10 | Integración: `demo` real (cámara → glosa → frase → voz); capturas de pantalla | Redacción de V. Ingeniería con los números y figuras |
-| D10‑D12 | Revisión del equipo, `.docx` (genoffice), impresión | — |
+| **T1 · Esqueleto** | A + F (con el asistente de IA) | Entorno conda `signvoice` (py 3.11), `pyproject.toml`, `src/g11` (6 módulos ≤100 líneas), `.task` locales, tests, `demo` con simulación |
+| **T2 · Datos** | B + C | Descarga Espejel (hoy), **spike MediaPipe sobre 20 imágenes primero**, extracción de landmarks → `.npz` + `meta.json` + `splits.json` por señante |
+| **T3 · Modelo** | A (o B, cuando haya datos) | `model.py` + `train.py`, entrenamiento CPU con LOSO, top‑1, F1 macro, matriz de confusión (PNG) |
+| **T4 · Informe** | D + E | Redacción V. Ingeniería (2 000‑2 500 palabras), tablas con los conteos reales, figuras, capturas, `.docx` con genoffice, **impresión** |
 
-Si la entrega 2 cae después del D12: #5 (10 glosas de punta a punta), #8 (umbral de
-confianza), #9 (prueba en máquina limpia sin internet).
+Contrato entre T1 y T2 (fijo desde ya, para no reescribir): `landmarks/clip_XXXX.npz` con
+`(T=32, F, 3)` + `meta.json` (`senante`, `glosa`, `sesion`) + `splits.json` por señante.
 
-## Reparto (6 estudiantes)
+## Cronograma
 
-| Rol | Hace |
+| Bloque | T1 | T2 | T3 | T4 |
+|---|---|---|---|---|
+| 16/11 tarde | Esqueleto completo + `demo` simulada corriendo | Spike 20 imágenes + conteo de glosas → lista de las 3‑5 glosas piloto | — | Esqueleto del informe I‑V + tabla de datos |
+| 16/11 noche | Soporte a T3 (módulos `model`/`train`) | Extracción de landmarks del subconjunto piloto | Entrenamiento piloto + métricas + matriz | Secciones de método y datos con números reales |
+| 17/11 mañana | Integración final, capturas | Splits y verificación | Métricas finales y figura | Maquetación, revisión en equipo, **imprimir y entregar 12:45** |
+
+## Línea mínima de salvación (si todo se rompe)
+
+Informe con: arquitectura + esqueleto corriendo (simulado) + **conteos reales** del dataset +
+método + **resultado del spike** (detección sobre N imágenes, honesto) + plan de continuidad.
+Aun así es una entrega visible y creíble: no hay un solo número inventado.
+
+## Riesgos de hoy (y su plan B)
+
+| Riesgo | Plan B |
 |---|---|
-| **A · código (pipeline/ML)** | Esqueleto, `landmarks`, `normalize`, `model`, `train`, métricas LOSO |
-| **B · código (datos/producto)** | Dataset y splits, `glossary`, `postprocess`, `app` (Gradio+TTS), capturas |
-| **C · datos/glosario** | Valida las 10 glosas en GDLSM/FENAMAS/SIGNA; cura Espejel (conteo de clips y señantes) |
-| **D · informe** | Redacta V. Ingeniería, figuras, tablas y referencias |
-| **E · validación/demo** | Contacto con el firmante externo; pruebas de punta a punta; ensaya la demo |
-| **F · QA** | `ruff`+`pytest` en verde por commit, revisa el docx, exporta PDF |
+| MediaPipe no detecta cuerpo (fondo/ropa negras) | Solo Hand Landmarker, normalizando por la muñeca; si también falla → MSLR o reportar solo el spike |
+| Poca extracción útil (imágenes estáticas, ≈15 frames) | Pilotear con las glosas de más frames y menos señantes; reportar la limitación |
+| Entrenamiento no termina a tiempo | 1 sola configuración (sin retunes), 3‑5 glosas, batch 32, semilla 1234 |
+| `.task` de MediaPipe no se consiguen sin red | Se descargan hoy con internet (la demo final sí es offline) |
 
-Si C, D o E saben programar, F o D se lleva la story 6 (`postprocess` son funciones puras,
-fáciles de testear) para aliviar a B.
+## Después de la entrega 2 (recuperación, 10 días)
 
-## Definition of done diaria
-
-- `ruff check` + `pytest` en verde en cada commit; **un commit por historia**.
-- Cada historia deja un **número o una captura** que entra al informe (conteo de landmarks,
-  top‑1 por señante excluido, F1 macro, latencia, frase de ejemplo).
-- El estado de cada historia se actualiza aquí y en `stories/`.
-
-## Riesgos principales (solo los que paran el plan)
-
-| Riesgo | Acción |
-|---|---|
-| MediaPipe no detecta cuerpo en fondo/ropa negras | Spike en D1; plan B: solo Hand Landmarker (normaliza por la muñeca) o **MSLR** (29 clases, 102 señantes, fondo blanco) como base |
-| Espejel son imágenes estáticas (≈15 frames/palabra) | Elegir glosas con más frames; reportar la limitación en V. Ingeniería |
-| `torch-env` (py 3.13) no encaja con `mediapipe` | Entorno nuevo conda `signvoice` con **Python 3.11** |
-| top‑1 sale bajo (60‑75 %) | Se reporta igual, con matriz de confusión y pares de glosas más confundidas: es evidencia de aprendizaje supervisado, no fracaso |
-
-## Qué hace la entrega "visible" aunque no sea perfecta
-
-1. Informe con **números reales** (aunque sean bajos) + matriz de confusión = evidencia de
-   que hubo entrenamiento supervisado de verdad.
-2. Esqueleto que corre con predicción simulada = la figura de arquitectura tiene sustento.
-3. Repo con 3 comandos en el README + `.task` locales = reproducible y 100 % offline.
-
-## Pendientes de cerrar antes del D1
-
-- [ ] Fecha exacta de la entrega 2 (para fijar los D1‑D12 en calendario).
-- [ ] Acceso al dataset Espejel CES 2024 en Mendeley (quién descarga y a qué URL).
-- [ ] Confirmar quiénes son A y B (los 2 programadores) y a quién se suma como tercer codificador.
-- [ ] Máquina principal de entrenamiento (laptop CPU; el `torch-env` actual sirve solo como referencia).
+El plan anterior de `plan.md` (fases 1‑3) sigue vigente: 10 glosas completas, stories 3‑7,
+umbral de confianza, máquina limpia, informe final. Lo que se construya hoy **no se
+descarta**: el esqueleto, la extracción y el entrenamiento piloto son la base de ese plan.

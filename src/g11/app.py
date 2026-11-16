@@ -2,6 +2,7 @@
 
 import gradio as gr
 
+from g11.capture import Capture
 from g11.glossary import Glossary
 from g11.postprocess import PhraseBuilder
 from g11.simulate import SimulatedPredictor
@@ -22,6 +23,7 @@ class DemoApp:
         self.voice = TtsVoice()
         self.clip_index = 0
         self.glosses = []
+        self.capture = None
 
     def step(self):
         """Predict the next simulated sign and update the phrase.
@@ -37,6 +39,26 @@ class DemoApp:
         self.voice.speak(phrase)
         return gloss, confidence, phrase, "simulado"
 
+    def capture_step(self):
+        """Capture one webcam frame, run the pipeline and update the phrase.
+
+        Returns:
+            Tuple (frame, gloss, confidence, phrase, flag); the flag
+            marks the result as simulated until the real model ships.
+        """
+        if self.capture is None:
+            self.capture = Capture()
+        ok, frame = self.capture.frame()
+        if not ok:
+            return None, "sin camara", 0.0, "No hay camara.", "error"
+        self.capture.detect(frame)
+        gloss, confidence = self.predictor.predict(self.clip_index)
+        self.clip_index += 1
+        self.glosses.append(gloss)
+        phrase = self.builder.build(self.glosses)
+        self.voice.speak(phrase)
+        return frame, gloss, confidence, phrase, "simulado"
+
     def build(self):
         """Assemble the single-page Gradio layout.
 
@@ -46,12 +68,15 @@ class DemoApp:
         """
         with gr.Blocks(title="SignVoice") as page:
             gr.Markdown("# SignVoice — demo simulada (LSM a voz)")
-            button = gr.Button("Simular señal")
+            frame = gr.Image(type="numpy", label="Webcam")
+            simulate = gr.Button("Simular señal")
+            capture = gr.Button("Capturar señal (webcam)")
             gloss = gr.Textbox(label="Glosa")
             confidence = gr.Number(label="Confianza")
             phrase = gr.Textbox(label="Frase en español")
             flag = gr.Textbox(label="Estado")
-            button.click(self.step, outputs=[gloss, confidence, phrase, flag])
+            simulate.click(self.step, outputs=[gloss, confidence, phrase, flag])
+            capture.click(self.capture_step, outputs=[frame, gloss, confidence, phrase, flag])
         return page
 
     def launch(self, **kwargs):

@@ -31,8 +31,9 @@ signs · `glossary.yaml` + **deterministic templates** for gloss→Spanish · `p
 
 ## Code rules (hard)
 
-- **Every code file: 60 lines or fewer, excluding docstring lines.** If it goes over,
-  split the file or remove functionality; **never raise the limit**.
+- **Every code file: 100 lines or fewer (hard limit), 60 lines (suggested), excluding
+  docstring lines.** Over 60: try to split the file; over 100: split it or remove
+  functionality; **never raise the hard limit**.
 - **Every function: 9 lines or fewer** (body, excluding signature and docstring).
 - **Programming standard: object-oriented.** Business logic always lives in classes, never
   in loose functions. One concrete class per concern; no base classes, no inheritance,

@@ -69,6 +69,98 @@ def test_normalize_returns_zeros_without_hands():
     assert np.all(Normalizer().normalize(hands) == 0.0)
 
 
+def test_forward_fill_replaces_zero_frames_with_previous():
+    """A frame where no hand was detected must copy the previous frame.
+
+    LSM Glosses videos show both hands in most frames, but a handful of
+    frames lose a hand; forward-filling with the last detected frame keeps
+    the temporal trajectory smooth instead of jumping to zero, which is the
+    preprocessing strategy used by the dataset paper.
+    """
+    rng = np.random.default_rng(42)
+    first = np.concatenate([_hand([0.0, 0.0, 0.0], rng), _hand([5.0, 2.0, 0.0], rng)])[None].astype(
+        np.float32
+    )
+    second = np.concatenate([_hand([0.1, 0.0, 0.0], rng), _hand([5.0, 2.1, 0.0], rng)])[
+        None
+    ].astype(np.float32)
+    sequence = np.concatenate([first, np.zeros_like(first), second], axis=0)
+    filled = Normalizer().forward_fill(sequence)
+    assert np.array_equal(filled[0], first[0])
+    assert np.array_equal(filled[1], first[0])
+    assert np.array_equal(filled[2], second[0])
+
+
+def test_forward_fill_keeps_leading_zeros():
+    """Frames before the first detection must stay zero.
+
+    A video can start before the hands enter the frame; there is no
+    previous detected frame to copy, so the leading zeros are kept and
+    the model sees an explicit absence at the start of the clip.
+    """
+    rng = np.random.default_rng(42)
+    first = np.concatenate([_hand([0.0, 0.0, 0.0], rng), _hand([5.0, 2.0, 0.0], rng)])[None].astype(
+        np.float32
+    )
+    sequence = np.concatenate([np.zeros_like(first), np.zeros_like(first), first], axis=0)
+    filled = Normalizer().forward_fill(sequence)
+    assert np.all(filled[0] == 0.0)
+    assert np.all(filled[1] == 0.0)
+    assert np.array_equal(filled[2], first[0])
+
+
+def test_resample_maps_any_length_to_32_frames():
+    """Videos of 31-58 frames must become the fixed 32-frame window.
+
+    Every LSM Glosses video is a little shorter or longer than 32
+    frames; the resampler maps the whole video onto the fixed window so
+    no clip is cropped to its center.
+    """
+    rng = np.random.default_rng(7)
+    frame = np.concatenate([_hand([0.0, 0.0, 0.0], rng), _hand([5.0, 2.0, 0.0], rng)])[None].astype(
+        np.float32
+    )
+    sequence = np.repeat(frame, 58, axis=0)
+    assert Normalizer().resample(sequence).shape == (32, 42, 3)
+
+
+def test_resample_interpolates_monotone_trajectory():
+    """A linear trajectory must stay linear after resampling.
+
+    Resampling is temporal interpolation, not frame picking: if a point
+    moves linearly from 0 to 1 across the video, the resampled frame i
+    must sit at i/31, exactly where the trajectory is at that instant.
+    """
+    rng = np.random.default_rng(7)
+    base = np.concatenate([_hand([0.0, 0.0, 0.0], rng), _hand([5.0, 2.0, 0.0], rng)]).astype(
+        np.float32
+    )
+    frames = []
+    for t in range(64):
+        frame = base.copy()
+        frame[0, 0] = t / 63.0
+        frames.append(frame)
+    sequence = np.stack(frames).astype(np.float32)
+    out = Normalizer().resample(sequence)
+    assert np.allclose(out[:, 0, 0], np.linspace(0.0, 1.0, 32), atol=1e-3)
+
+
+def test_resample_of_single_frame_repeats_it():
+    """A single detected frame must expand to 32 identical frames.
+
+    A video where the hands are only visible once still has to produce
+    a full window; repeating the frame is the only honest option.
+    """
+    rng = np.random.default_rng(7)
+    frame = np.concatenate([_hand([0.0, 0.0, 0.0], rng), _hand([5.0, 2.0, 0.0], rng)])[None].astype(
+        np.float32
+    )
+    out = Normalizer().resample(frame)
+    assert out.shape == (32, 42, 3)
+    assert np.array_equal(out[0], frame[0])
+    assert np.allclose(out, frame[0])
+
+
 def test_normalize_pads_window_to_32_frames():
     """Short clips must be padded to the fixed 32-frame model window.
 

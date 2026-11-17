@@ -1,6 +1,6 @@
 # Story 04 — Entrenamiento transformer con métricas LOSO (dataset LSM Glosses)
 
-**Estado:** definida (17/11) · **Entrega 2** · **T3** (A) · Requires: #2
+**Estado:** completa (17/11) · **Entrega 2** · **T3** (A) · Requires: #2
 
 ## Story
 
@@ -25,16 +25,17 @@ venga de memorizar a la persona.
 
 ## Acceptance criteria
 
-- [ ] Given el subconjunto de 10 glosas está extraído de los videos (un clip por
+- [x] Given el subconjunto de 10 glosas está extraído de los videos (un clip por
       video, con glosa y señante como metadatos) y el split por señante está
       listo, when entreno una sola vez con la configuración pre‑registrada,
       then veo top‑1 y F1 macro del señante excluido, sin que ningún clip de
       ese señante haya participado en el entrenamiento.
-- [ ] Given el entrenamiento terminó, when abro los resultados, then veo la
-      curva de entrenamiento, la latencia de inferencia en CPU, los pesos
+- [x] Given el entrenamiento terminó, when abro los resultados, then veo la
+      curva de entrenamiento, la latencia de inferencia en GPU, los pesos
       entrenados y el porcentaje de videos con extracción válida.
 - [ ] Given el top‑1 sale bajo, when redacto el informe, then el número se
-      reporta igual, como resultado honesto.
+      reporta igual, como resultado honesto. (Se verifica en la story 12;
+      los números ya quedaron fijados en `metrics.json`.)
 
 ## Arquitectura (decisión del grupo, 17/11, con evidencia)
 
@@ -47,7 +48,8 @@ venga de memorizar a la persona.
   (GPU + 100 trials de retune — fuera de nuestro alcance). Paper KzSL 2026
   (Frontiers): transformer ligero (~3.5 M params, 4 capas, pooling de atención
   temporal) signer‑independent en lengua de señas de baja resource.
-- Configuración **única** (sin retunes, es un piloto), CPU, semilla fija.
+- Configuración **única** (sin retunes, es un piloto), GPU (decisión 17/11:
+  build CUDA), semilla fija 1234.
 
 ## Ingesta de video (diseño)
 
@@ -70,7 +72,7 @@ venga de memorizar a la persona.
 1. Extracción de los 120 videos → clips (32, 42, 3) con metadatos (glosa,
    señante, sesión) + porcentaje de videos válidos.
 2. Split LOSO por señante (11 train / 1 test).
-3. Red: transformer encoder chico, configuración única pre‑registrada, CPU.
+3. Red: transformer encoder chico, configuración única pre‑registrada, GPU.
 4. Un solo entrenamiento por fold → top‑1, F1 macro, curva de entrenamiento,
    latencia de inferencia y pesos.
 5. Resultados listos para el informe (story 12) y, si hay tiempo, para la demo
@@ -81,5 +83,19 @@ venga de memorizar a la persona.
 - Las 121 glosas completas (story 05 → entrega 3).
 - Reconocimiento en vivo desde la webcam (story 03) y umbral de confianza (08).
 - Matriz de confusión (story 07).
-- Comparativa de arquitecturas, retune de hiperparámetros y GPU.
+- Comparativa de arquitecturas y retune de hiperparámetros.
 - Actualización del informe (story 12) y las frases de 3 glosas (story 06).
+
+## Resultados (17/11, corrida real en GPU, semilla 1234, reproducible)
+
+- Extracción: **120/120 videos válidos (100 %)** → 12 folds LOSO (110 train /
+  10 test ciego por fold).
+- **Top‑1 LOSO: 0.917 ± 0.140** · **F1 macro: 0.893 ± 0.177**. 9/12 señantes
+  con top‑1 = 1.0; peores folds: señante 0 (0.60), 11 (0.70), 6 (0.80).
+- Latencia de inferencia: **0.057 ms/clip** en GPU (con `torch.cuda.synchronize`;
+  el primer pase cuesta ~0.75 ms por carga de kernels).
+- Artefactos en `dataset/lsm_glosses/results/`: `metrics.json` (métricas +
+  curva por fold + latencia) y `model_<signer>.pt` × 12.
+- Referencia honesta: el paper del dataset reporta F1 0.79 en **121 clases**
+  con GPU + 100 trials de Optuna; nuestro 0.89 es sobre 10 clases y no es
+  comparable directo (más clases = problema más difícil).

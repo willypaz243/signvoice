@@ -1,12 +1,38 @@
 """Gradio one-page demo: sign -> gloss -> phrase -> voice (offline)."""
 
 import gradio as gr
+import numpy as np
 
-from g11.simulate import SimulatedPredictor
 from g11.speak import TtsVoice
 from language.glossary import Glossary
 from language.postprocess import PhraseBuilder
 from vision.capture import Capture
+
+
+class SimulatedPredictor:
+    """Pick a gloss deterministically so the demo runs before the real model.
+
+    Args:
+        glosses: Vocabulary of gloss labels the predictor may return.
+        seed: Base seed; the clip index is added to it for reproducibility.
+    """
+
+    def __init__(self, glosses, seed=1234):
+        self.glosses = glosses
+        self.seed = seed
+
+    def predict(self, clip_index):
+        """Return a deterministic (gloss, confidence) pair for a clip.
+
+        Args:
+            clip_index: Zero-based index of the clip in the session.
+
+        Returns:
+            Tuple (gloss, confidence); the UI marks the result as simulated.
+        """
+        rng = np.random.default_rng(self.seed + clip_index)
+        gloss = self.glosses[int(rng.integers(len(self.glosses)))]
+        return gloss, 0.9
 
 
 class DemoApp:

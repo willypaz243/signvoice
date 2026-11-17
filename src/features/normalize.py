@@ -30,6 +30,43 @@ class Normalizer:
             sequence = np.concatenate([sequence, tail])
         return sequence[:FRAMES]
 
+    def forward_fill(self, sequence):
+        """Fill frames without a hand with the last detected frame.
+
+        Args:
+            sequence: Array of shape (T, F, 3) with the raw landmarks.
+
+        Returns:
+            Array of the same shape; all-zero frames are replaced by the
+            previous detected frame, leading zeros stay zero.
+        """
+        out = np.asarray(sequence, dtype=np.float32).copy()
+        last = out[0]
+        for i in range(1, len(out)):
+            if out[i].sum() == 0:
+                out[i] = last
+            else:
+                last = out[i]
+        return out
+
+    def resample(self, sequence):
+        """Resample a sequence of any length to the 32-frame window.
+
+        Args:
+            sequence: Array of shape (T, F, 3) with the raw landmarks.
+
+        Returns:
+            Array of shape (32, F, 3); frames are linearly interpolated
+            along the time axis, so a single frame repeats 32 times.
+        """
+        sequence = np.asarray(sequence, dtype=np.float32)
+        flat = sequence.reshape(sequence.shape[0], -1)
+        source = np.linspace(0.0, sequence.shape[0] - 1, FRAMES)
+        out = np.empty((FRAMES, flat.shape[1]), dtype=np.float32)
+        for dim in range(flat.shape[1]):
+            out[:, dim] = np.interp(source, np.arange(sequence.shape[0]), flat[:, dim])
+        return out.reshape(FRAMES, *sequence.shape[1:])
+
     def hand_frame(self, points):
         """Center and scale one frame relative to the wrists.
 

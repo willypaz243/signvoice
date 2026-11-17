@@ -1,0 +1,8 @@
+# Pre-registered training config (story 04): one run per fold, no retunes.
+glosses: ["HOLA", "SI", "NO", "GRACIAS", "CASA", "AMIGO", "NOS_VEMOS", "POR_FAVOR", "DOCTOR", "AYUDA"]
+clips: dataset/lsm_glosses/landmarks
+out: dataset/lsm_glosses/results
+epochs: 25
+learning_rate: 0.001
+seed: 1234
+device: cuda

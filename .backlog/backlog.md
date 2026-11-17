@@ -74,7 +74,7 @@ Cronograma, equipos y riesgos en `plan-entrega2.md`. *Cursiva* = stretch (solo s
 | 1 | Esqueleto cámara→voz (simulado) | 2 | **completa** (17/11) | T1 | `stories/01-esqueleto-camara-a-voz.md` |
 | 2 | Datos Espejel (spike + extracción + splits) | 2 | **completa** (17/11) | T2 | `stories/02-datos-espejel.md` |
 | *3* | *Una glosa real desde la webcam* | *2 (stretch)* | *pendiente (tras la 4)* | *T2* | `stories/03-una-glosa-real.md` |
-| 4 | Entrenamiento transformer + métricas LOSO (LSM Glosses) | 2 | definida (17/11; es la siguiente) | T3 | `stories/04-entrenamiento-losos.md` |
+| 4 | Entrenamiento transformer + métricas LOSO (LSM Glosses) | 2 | **completa** (17/11: top‑1 0.917 ± 0.140, F1 0.893 ± 0.177) | T3 | `stories/04-entrenamiento-losos.md` |
 | *5* | *Las 121 glosas* | *3* | *pendiente (story 04 como base; el paper del dataset ya las cubre como baseline)* | *T3* | `stories/05-diez-glosas.md` |
 | 6 | Frase en español (glosario + plantillas + 3 frases de 3 glosas) | 2 | en curso (falta: YAML con las 10 glosas + frases de 3 glosas) | T2 | `stories/06-frase-en-espanol.md` |
 | 7 | Matriz de confusión | 2 | pendiente (con la 4) | T3 | `stories/07-matriz-de-confusion.md` |

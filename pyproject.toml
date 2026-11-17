@@ -3,22 +3,30 @@ name = "signvoice"
 version = "0.1.0"
 description = "SignVoice: LSM sign recognition converted to speech (Group 11)"
 requires-python = ">=3.11"
-license = { text = "MIT" }
+license = "MIT"
 dependencies = [
-    "numpy>=2,<3",
-    "torch>=2.6",
-    "mediapipe>=0.10",
-    "opencv-python>=4.10",
-    "gradio>=5",
-    "pyttsx3>=2.9",
-    "typer>=0.12",
-    "pyyaml>=6",
-    "matplotlib>=3.9",
-    "piper-tts>=1.3",
+  "gradio>=5",
+  "matplotlib>=3.9",
+  "mediapipe>=0.10",
+  "numpy>=2,<3",
+  "opencv-python>=4.10",
+  "piper-tts>=1.3",
+  "pyttsx3>=2.9",
+  "pyyaml>=6",
+  "torch>=2.6",
+  "typer>=0.12",
 ]
 
 [project.scripts]
 g11 = "g11.__main__:run"
+
+[dependency-groups]
+dev = [
+  "pytest>=9.2.0",
+  "ruff>=0.17.5",
+  "tombi>=1.11",
+  "ty>=0.0.104",
+]
 
 [build-system]
 requires = ["hatchling"]
@@ -26,21 +34,6 @@ build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/g11", "src/data", "src/features", "src/language", "src/vision"]
-
-[dependency-groups]
-dev = [
-    "pytest>=9.2.0",
-    "ruff>=0.17.5",
-    "ty>=0.0.104",
-]
-
-[tool.uv.sources]
-torch = { index = "pytorch-cpu" }
-
-[[tool.uv.index]]
-name = "pytorch-cpu"
-url = "https://download.pytorch.org/whl/cpu"
-explicit = true
 
 [tool.ruff]
 line-length = 100

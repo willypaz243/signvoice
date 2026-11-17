@@ -1,6 +1,6 @@
 # Story 01 — Setup completo y esqueleto de cámara a voz (walking skeleton)
 
-**Estado:** en curso · **Entrega 2** (hackathon 16/11) · **T1** (A + F, con el asistente de IA)
+**Estado:** completa (17/11) · **Entrega 2** (hackathon 16/11) · **T1** (A + F, con el asistente de IA)
 
 ## Story
 
@@ -10,13 +10,13 @@ cualquier integrante del equipo pueda empezar a contribuir sin instalar nada a m
 
 ## Acceptance criteria
 
-- [ ] Given clono el repo y corro el setup y el comando de demo, when la página se
+- [x] Given clono el repo y corro el setup y el comando de demo, when la página se
       abre, then veo mi webcam y un panel con la glosa predicha (marcada como
       simulada), la frase en español y la reproducción de voz.
-- [ ] Given estoy frente a la cámara, when mantengo una seña 2 s, then el panel
+- [x] Given estoy frente a la cámara, when mantengo una seña 2 s, then el panel
       muestra un conteo de landmarks detectados distinto de cero y la frase se lee
       en voz alta.
-- [ ] Given la máquina no tiene internet, when corro la demo, then funciona
+- [x] Given la máquina no tiene internet, when corro la demo, then funciona
       (modelos locales y voz del sistema).
 
 ## Reglas de esta story

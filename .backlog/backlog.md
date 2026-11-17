@@ -38,9 +38,9 @@ que ya funciona.
 | Lenguaje | **Python 3.11** |
 | Datos / experimentos | **PyTorch** (CPU; GPU+CUDA con versiones fijadas para el entrenamiento final) |
 | Landmarks | **MediaPipe Tasks**: Pose Landmarker + Hand Landmarker (`.task` locales, sin red) |
-| Dataset base | **Espejel-Cabrera et al. 2024** (Mendeley, CC BY 4.0): 249 palabras LSM, 31 442 imágenes, 11 señantes sordos |
-| Vocabulario | **10 glosas** elegidas por disponibilidad de clips, validadas en GDLSM/FENAMAS/SIGNA |
-| Modelo | **GRU (2 capas) + atención temporal**, salida softmax sobre las 10 glosas |
+| Dataset base | **LSM Glosses** (Zenodo 18330565, CC BY 4.0; Navarrete‑Lopez et al. 2026): 121 glosas en español, 1 415 videos, 12 señantes. Espejel (Mendeley) queda como evidencia del spike |
+| Vocabulario | **10 glosas** (decisión 17/11): HOLA, SI, NO, GRACIAS, CASA, AMIGO, NOS_VEMOS, POR_FAVOR, DOCTOR, AYUDA — validadas en GDLSM/FENAMAS/SIGNA |
+| Modelo | **Transformer encoder** (4 capas, 128 dims, token de clasificación), salida softmax sobre las 10 glosas (reemplaza al GRU + atención, decisión 17/11) |
 | Post-proceso | **`glossary.yaml` + plantillas deterministas** (SVO, artículos, conjugación, marca de pregunta) |
 | Voz | **`pyttsx3`** (offline, voz del sistema) |
 | Interfaz | **Gradio** (webcam en navegador) + **CLI `typer`** para el pipeline por lotes |
@@ -71,15 +71,15 @@ Cronograma, equipos y riesgos en `plan-entrega2.md`. *Cursiva* = stretch (solo s
 
 | # | Historia | Entrega | Estado | Equipo | Ficha |
 |---|---|---|---|---|---|
-| 1 | Esqueleto cámara→voz (simulado) | 2 | **en curso** | T1 | `stories/01-esqueleto-camara-a-voz.md` |
-| 2 | Datos Espejel (spike + extracción + splits) | 2 | pendiente (arranca D1) | T2 | `stories/02-datos-espejel.md` |
-| *3* | *Una glosa real desde la webcam* | *2 (stretch)* | *pendiente* | *T2* | `stories/03-una-glosa-real.md` |
-| 4 | Entrenamiento GRU + métricas LOSO | 2 | pendiente (cuando haya datos) | T3 | `stories/04-entrenamiento-losos.md` |
-| *5* | *Las 10 glosas* | *2 (stretch) → 3* | *pendiente* | *T3* | `stories/05-diez-glosas.md` |
-| 6 | Frase en español (glosario + plantillas) | 2 | pendiente | T2 | `stories/06-frase-en-espanol.md` |
+| 1 | Esqueleto cámara→voz (simulado) | 2 | **completa** (17/11) | T1 | `stories/01-esqueleto-camara-a-voz.md` |
+| 2 | Datos Espejel (spike + extracción + splits) | 2 | **completa** (17/11) | T2 | `stories/02-datos-espejel.md` |
+| *3* | *Una glosa real desde la webcam* | *2 (stretch)* | *pendiente (tras la 4)* | *T2* | `stories/03-una-glosa-real.md` |
+| 4 | Entrenamiento transformer + métricas LOSO (LSM Glosses) | 2 | definida (17/11; es la siguiente) | T3 | `stories/04-entrenamiento-losos.md` |
+| *5* | *Las 121 glosas* | *3* | *pendiente (story 04 como base; el paper del dataset ya las cubre como baseline)* | *T3* | `stories/05-diez-glosas.md` |
+| 6 | Frase en español (glosario + plantillas + 3 frases de 3 glosas) | 2 | en curso (falta: YAML con las 10 glosas + frases de 3 glosas) | T2 | `stories/06-frase-en-espanol.md` |
 | 7 | Matriz de confusión | 2 | pendiente (con la 4) | T3 | `stories/07-matriz-de-confusion.md` |
 | 8‑11 | Confianza, máquina limpia, multi‑lengua, servidor | 3 | aplazada | — | — |
-| 12 | Informe V. Ingeniería (docx + PDF) | 2 | pendiente (T4 redacta desde D1) | T4 | — |
+| 12 | Informe V. Ingeniería (docx + PDF) | 2 | en curso (borrador MD listo; falta docx+PDF y las métricas de la 4) | T4 | — |
 
 **Regla del hackathon:** cada historia cierra solo con `ruff check` + `pytest` en verde y un
 número o captura que entra al informe. Lo que no se entrena no se inventa en el informe.
@@ -94,10 +94,11 @@ número o captura que entra al informe. Lo que no se entrena no se inventa en el
 3. Como señante, quiero que el sistema reconozca **una glosa real** desde mi cámara y la muestre en
    pantalla, para confirmar que los landmarks de mi webcam son compatibles con los del dataset. Requires: #2
 4. Como evaluador, quiero ver **top‑1 y F1 macro al dejar fuera a un señante** (LOSO) en el
-   entrenamiento, para que el número del modelo no venga de memorizar a la persona. Requires: #3
+   entrenamiento con los videos de LSM Glosses, para que el número del modelo no venga de
+   memorizar a la persona. Requires: #2
 5. Como señante, quiero que el sistema reconozca **las 10 glosas**, para poder armar mensajes de
    varias palabras. Requires: #4
-6. Como oyente, quiero **escuchar una frase de 2‑3 palabras en español** construida con
+6. Como oyente, quiero **escuchar una frase de al menos 3 glosas en español** construida con
    diccionario y plantillas, para que el mensaje se entienda. Requires: #5
 7. Como evaluador, quiero ver la **matriz de confusión** y los pares de glosas más confundidos,
    para explicar el error con evidencia. Requires: #5

@@ -23,9 +23,11 @@ The plan and the stories live in `.backlog/` (`backlog.md`, `plan.md`, `stories/
 
 ## Stack (not changed without an explicit group decision)
 
-Python 3.11 · PyTorch (CPU by default; CUDA with pinned versions for the final training) ·
-MediaPipe **Tasks** Pose + Hands (local `.task` files) · dataset **Espejel CES 2024**
-(249 LSM words, CC BY) · **GRU + temporal attention** over **10 glosses** of **isolated**
+Python 3.11 · PyTorch (**CUDA build**, pinned in `uv.lock`; CPU-only wheels are for
+machines without an NVIDIA GPU) ·
+MediaPipe **Tasks** Pose + Hands (local `.task` files) · dataset **LSM Glosses**
+(Zenodo 18330565, CC BY; Espejel kept as spike evidence) · **Transformer encoder**
+(4 layers, 128 dims, classification token) over **10 glosses** of **isolated**
 signs · `glossary.yaml` + **deterministic templates** for gloss→Spanish · `pyttsx3`
 (offline voice) · **Gradio** (webcam) + CLI `typer` · configuration in **YAML** ·
 `ruff` + `ty` + `pytest`.
@@ -50,7 +52,9 @@ signs · `glossary.yaml` + **deterministic templates** for gloss→Spanish · `p
   `pytest` without camera, network, or GPU.
 - **Quality gate:** `ruff check` and `ty check` must pass on every commit. `ty` runs with a
   pragmatic configuration (`pyproject.toml`): consistent typing of the first-party code,
-  without blocking on third-party libraries that ship no type stubs.
+  without blocking on third-party libraries that ship no type stubs. After any
+  `pyproject.toml` edit: `uv run tombi format --check pyproject.toml` (TOML valid and
+  canonically formatted; `tombi` is a dev dependency).
 - **Test docstrings:** every test has an English docstring explaining what it tests and why
   it matters, so any developer can understand it.
 - **Core docstrings:** business-logic (core) classes and methods use **Google-style**
@@ -127,6 +131,7 @@ python scripts/download_lsm_glosses.py  # one-time: LSM Glosses videos (2.7 GB) 
 ruff check .
 ty check .
 pytest -q
+uv run tombi format --check pyproject.toml   # validate pyproject.toml (run after editing it)
 python -m g11 demo          # Gradio + webcam + voice
 python -m g11 train --config config/es_MX.yaml
 ```

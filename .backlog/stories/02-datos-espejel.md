@@ -1,6 +1,6 @@
 # Story 02 — Datos Espejel: spike, extracción y splits
 
-**Estado:** en curso (descarga + spike listos 16/11) · **Entrega 2** (hackathon 16/11) · **T2**
+**Estado:** completa (17/11) · **Entrega 2** (hackathon 16/11) · **T2**
 
 ## Story
 
@@ -44,8 +44,9 @@ sus clips y señantes), para creerme que el experimento es reproducible.
       y `splits.json` LOSO por señante: **48 train / 5 test** (señante 11 held out).
       Gotcha: los señantes 10-11 crean carpetas `10CCC`/`11CCC` — el glob era `0*` y los
       perdía. Calidad honesta: 1 clip (07055) sale sin manos detectadas en ninguna frame.
-- [ ] Tabla de conteos para el informe: glosa × imágenes × señantes × frames.
-- [ ] `ruff check` + `ty check` + `pytest` en verde (lógica pura con test).
+- [x] Tabla de conteos para el informe: glosa × imágenes × señantes × frames
+      (Tabla 6 del borrador, `docs/informe/entrega2_borrador.md`).
+- [x] `ruff check` + `ty check` + `pytest` en verde (lógica pura con test).
 
 ## Plan
 

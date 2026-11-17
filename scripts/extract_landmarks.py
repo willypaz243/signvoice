@@ -1,7 +1,7 @@
 """Extract hand landmarks from Espejel clips (story 02b, Plan B).
 
 Batch job: reuses L3 Capture and L0 Landmarks/Normalizer; never becomes
-a src module. Writes dataset/landmarks/clip_<sesion>.npz with a
+a src module. Writes dataset/espejel/landmarks/clip_<sesion>.npz with a
 (32, 42, 3) window per clip, its metadata json and splits.json (LOSO).
 """
 
@@ -88,9 +88,9 @@ class Extractor:
 
 def main():
     """Extract the pilot clips and write the LOSO splits."""
-    out = Path("dataset/landmarks")
+    out = Path("dataset/espejel/landmarks")
     out.mkdir(parents=True, exist_ok=True)
-    extractor = Extractor("dataset", out)
+    extractor = Extractor("dataset/espejel", out)
     try:
         ids = extractor.run()
     finally:

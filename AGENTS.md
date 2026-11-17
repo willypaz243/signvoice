@@ -102,7 +102,9 @@ src/g11/  app.py  speak.py  __main__.py            # L5
           landmarks.py  normalize.py               # L0
 glossary/ LSM.yaml
 models/   (downloaded, gitignored; see scripts/download_models.py)
-dataset/  (downloaded, gitignored; see scripts/download_dataset.py)
+dataset/  (downloaded, gitignored)
+          espejel/     Espejel CES 2024 images (see scripts/download_dataset.py)
+          lsm_glosses/ LSM Glosses videos, candidate/future work (Zenodo 18330565)
 scripts/  download_models.py  download_dataset.py  extract_landmarks.py
 tests/    test_<module>.py (mirrors src/g11/)
 ```
@@ -116,7 +118,8 @@ file: if a module grows beyond 60 lines, it is split (`model_gru.py`,
 ```bash
 uv sync --all-groups
 python scripts/download_models.py   # one-time: piper voice + MediaPipe .task
-python scripts/download_dataset.py  # one-time: Espejel dataset (2 GB) into dataset/
+python scripts/download_dataset.py   # one-time: Espejel dataset (2 GB) into dataset/espejel/
+python scripts/download_lsm_glosses.py  # one-time: LSM Glosses videos (2.7 GB) into dataset/lsm_glosses/
 ruff check .
 ty check .
 pytest -q

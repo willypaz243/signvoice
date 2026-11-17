@@ -49,7 +49,7 @@ class Spike:
 
 def main():
     """Run the spike over the sample and print the detection rate."""
-    spike = Spike("dataset")
+    spike = Spike("dataset/espejel")
     print(f"hands detected: {spike.run()}/{COUNT}")
 
 

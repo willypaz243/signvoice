@@ -1,8 +1,8 @@
-"""Download the Espejel MSL dataset into the dataset/ directory.
+"""Download the Espejel MSL dataset into the dataset/espejel directory.
 
 One-time, fully automated: fetches the file list and folder tree from
 the Mendeley public API (no token), downloads every file with sha256
-verification and writes dataset/manifest.json with the real counts.
+verification and writes dataset/espejel/manifest.json with the real counts.
 
 Usage:
     python scripts/download_dataset.py
@@ -10,7 +10,7 @@ Usage:
 
 from g11.dataset import EspejelDataset
 
-ROOT = "dataset"
+ROOT = "dataset/espejel"
 
 
 def main():

@@ -65,15 +65,46 @@ signs · `glossary.yaml` + **deterministic templates** for gloss→Spanish · `p
   LSM domain terms (`glosa`, `señante`) are explained in English in the docstrings and
   live in Spanish only in the documentation (`docs/`, report).
 
-## Structure
+## Structure (layered, ≤ 12 modules)
+
+Layers go **top → bottom**; modules only import from lower layers, never upward.
+
+| Layer | Modules | Role | Depends on |
+|---|---|---|---|
+| L5 · Application | `app` (incl. simulated predictor), `speak`, `__main__` | Gradio demo, voice, CLI | L0–L4 |
+| L4 · Model | `model`, `train` | GRU + attention, LOSO training, metrics | L0 |
+| L3 · Vision | `capture` | webcam → pose + hands (MediaPipe Tasks) | — |
+| L2 · Data | `dataset`, `catalog` | Espejel download + counts / gloss selection | — |
+| L1 · Language | `glossary`, `postprocess` | glosses → Spanish phrase (YAML data) | — |
+| L0 · Features | `landmarks`, `normalize` | (75, 3) stack → (32, 75, 3) torso-relative window | nothing (numpy) |
+
+- **Steady state is exactly 12 modules.** Batch/one-shot jobs live in `scripts/`,
+  not `src/`: dataset download, `.task`/voice download, landmark extraction
+  (`scripts/extract_landmarks.py` reuses L3 + L0 classes; it never becomes a module).
+- **One module = one business class**: `Capture`, `Landmarks`, `Normalizer`,
+  `Glossary`, `PhraseBuilder`, `Catalog`, `EspejelDataset`, `TtsVoice`, `DemoApp`,
+  `SignModel`, `Trainer`.
+- **L0/L1/L2 are pure logic**: testable with `pytest` without camera, network, or GPU.
+- **When the real model ships (story 04):** `simulate` merges into `app` (single
+  consumer; delete rule) in the same commit as `model.py` + `train.py`.
+- **`tests/` mirrors `src/` 1:1** (`test_<module>.py`), flat, no subpackages.
+- **If a module grows:** over 60 lines split it (`model_gru.py`,
+  `model_attention.py`); over 100, split or cut. If wiring the pipeline pushes
+  `app` past 100, extract `pipeline.py` (L5, class `Pipeline`) and merge `speak`
+  into `app` to stay at 12.
 
 ```
-src/g11/  capture.py  landmarks.py  normalize.py  model.py  train.py
-          postprocess.py  glossary.py  app.py
+src/g11/  app.py  speak.py  __main__.py            # L5
+          model.py  train.py                       # L4
+          capture.py                               # L3
+          dataset.py  catalog.py                   # L2
+          glossary.py  postprocess.py              # L1
+          landmarks.py  normalize.py               # L0
 glossary/ LSM.yaml
 models/   (downloaded, gitignored; see scripts/download_models.py)
-scripts/  download_models.py
-tests/    test_normalize.py  test_postprocess.py  test_glossary.py
+dataset/  (downloaded, gitignored; see scripts/download_dataset.py)
+scripts/  download_models.py  download_dataset.py  extract_landmarks.py
+tests/    test_<module>.py (mirrors src/g11/)
 ```
 
 `pyproject.toml` with pinned dependencies (locked in `uv.lock`). One module per small
@@ -85,6 +116,7 @@ file: if a module grows beyond 60 lines, it is split (`model_gru.py`,
 ```bash
 uv sync --all-groups
 python scripts/download_models.py   # one-time: piper voice + MediaPipe .task
+python scripts/download_dataset.py  # one-time: Espejel dataset (2 GB) into dataset/
 ruff check .
 ty check .
 pytest -q

@@ -4,15 +4,15 @@
 version: 1
 language: es_MX
 words:
-  hola: "hola"
-  adios: "adiós"
-  gracias: "gracias"
-  si: "sí"
-  no: "no"
-  agua: "agua"
-  casa: "casa"
-  amigo: "amigo"
-  mujer: "mujer"
-  hombre: "hombre"
+  "hola": "hola"
+  "adios": "adiós"
+  "gracias": "gracias"
+  "si": "sí"
+  "no": "no"
+  "agua": "agua"
+  "casa": "casa"
+  "amigo": "amigo"
+  "mujer": "mujer"
+  "hombre": "hombre"
 markers:
   pregunta: "?"

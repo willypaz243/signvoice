@@ -1,22 +1,21 @@
-"""Tests for the (75, 3) landmark vector assembly."""
+"""Tests for the (42, 3) hand landmark vector assembly."""
 
 import numpy as np
 
 from g11.landmarks import Landmarks
 
 
-def test_landmarks_stack_pose_and_hands_into_75_vector():
-    """Pose and both hands must stack into one (75, 3) vector in order.
+def test_landmarks_stack_hands_into_42_vector():
+    """Both hands must stack into one (42, 3) vector in order.
 
-    The model input is 33 pose points followed by 21 left-hand and
-    21 right-hand points; a missing hand stays zero, so the stack must
-    preserve the input order exactly.
+    Plan B (story 02 spike): pose is dropped because the anonymized
+    faces and black clothing keep pose detection near 55 percent, while
+    hands reach 90 percent with gamma. The stack must preserve the hand
+    order: left (0:21) then right (21:42).
     """
-    pose = np.ones((33, 3), dtype=np.float32)
     hands = np.zeros((2, 21, 3), dtype=np.float32)
     hands[1] = 2.0
-    vector = Landmarks().stack(pose, hands)
-    assert vector.shape == (75, 3)
-    assert np.all(vector[:33] == 1.0)
-    assert np.all(vector[33:54] == 0.0)
-    assert np.all(vector[54:] == 2.0)
+    vector = Landmarks().stack(hands)
+    assert vector.shape == (42, 3)
+    assert np.all(vector[:21] == 0.0)
+    assert np.all(vector[21:] == 2.0)

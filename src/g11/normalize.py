@@ -1,18 +1,18 @@
-"""Torso-relative normalization of landmark sequences."""
+"""Wrist-relative normalization of hand landmark sequences."""
 
 import numpy as np
 
 FRAMES = 32
-LEFT_SHOULDER = 5
-RIGHT_SHOULDER = 6
+LEFT = 0
+RIGHT = 21
 CLIP = 2.0
 
 
 class Normalizer:
-    """Translate and scale landmark frames to a torso-relative frame.
+    """Translate and scale hand landmarks to a wrist-relative frame.
 
-    The output does not depend on the person's position or distance to
-    the camera.
+    The output does not depend on the signer's position or distance to
+    the camera, and a hand the landmarker did not detect stays zero.
     """
 
     def to_frames(self, sequence):
@@ -30,21 +30,32 @@ class Normalizer:
             sequence = np.concatenate([sequence, tail])
         return sequence[:FRAMES]
 
-    def torso_frame(self, points):
-        """Center and scale one frame using the shoulder line.
+    def hand_frame(self, points):
+        """Center and scale one frame relative to the wrists.
 
         Args:
-            points: Array of shape (F, 3) with one frame of landmarks.
+            points: Array of shape (42, 3) with both hand landmarks.
 
         Returns:
-            Array of shape (F, 3) in the torso frame; zeros when no torso is found.
+            Array of shape (42, 3); a missing hand stays zero.
         """
-        left, right = points[LEFT_SHOULDER], points[RIGHT_SHOULDER]
-        width = float(np.linalg.norm(left - right))
-        if width < 1e-6:
-            return np.zeros_like(points)
-        center = (left + right) / 2.0
-        return np.clip((points - center) / width, -CLIP, CLIP)
+        present = [i for i in (LEFT, RIGHT) if points[i : i + 21].sum() > 0]
+        if present and self._scale(points, present) >= 1e-6:
+            return self._centered(points, present)
+        return np.zeros_like(points)
+
+    def _centered(self, points, present):
+        """Return the wrist-centered, scale-normalized frame."""
+        center = np.mean([points[i] for i in present], axis=0)
+        scale = self._scale(points, present)
+        out = np.zeros_like(points)
+        for i in present:
+            out[i : i + 21] = np.clip((points[i : i + 21] - center) / scale, -CLIP, CLIP)
+        return out
+
+    def _scale(self, points, present):
+        """Mean wrist-to-middle-finger distance over the present hands."""
+        return float(np.mean([np.linalg.norm(points[i + 9] - points[i]) for i in present]))
 
     def normalize(self, sequence):
         """Normalize a landmark sequence to the model input shape.
@@ -53,7 +64,7 @@ class Normalizer:
             sequence: Array of shape (T, F, 3) with the raw landmarks.
 
         Returns:
-            Array of shape (32, F, 3) in the torso-relative frame.
+            Array of shape (32, F, 3) in the wrist-relative frame.
         """
         sequence = self.to_frames(np.asarray(sequence, dtype=np.float32))
-        return np.stack([self.torso_frame(frame) for frame in sequence]).astype(np.float32)
+        return np.stack([self.hand_frame(frame) for frame in sequence]).astype(np.float32)

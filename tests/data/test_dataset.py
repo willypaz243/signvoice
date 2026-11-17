@@ -2,7 +2,7 @@
 
 import zipfile
 
-from g11.catalog import Catalog
+from data.catalog import Catalog
 
 FOLDERS = [
     {"id": "root", "name": "MSLwords1"},

@@ -2,7 +2,7 @@
 
 import numpy as np
 
-from g11.landmarks import Landmarks
+from features.landmarks import Landmarks
 
 
 def test_landmarks_stack_hands_into_42_vector():

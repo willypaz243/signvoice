@@ -2,11 +2,11 @@
 
 import gradio as gr
 
-from g11.capture import Capture
-from g11.glossary import Glossary
-from g11.postprocess import PhraseBuilder
 from g11.simulate import SimulatedPredictor
 from g11.speak import TtsVoice
+from language.glossary import Glossary
+from language.postprocess import PhraseBuilder
+from vision.capture import Capture
 
 
 class DemoApp:

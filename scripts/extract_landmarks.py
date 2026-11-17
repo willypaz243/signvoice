@@ -12,10 +12,10 @@ from pathlib import Path
 import cv2
 import numpy as np
 
-from g11.capture import Capture
-from g11.catalog import Catalog
-from g11.landmarks import Landmarks
-from g11.normalize import Normalizer
+from data.catalog import Catalog
+from features.landmarks import Landmarks
+from features.normalize import Normalizer
+from vision.capture import Capture
 
 PILOT = {"001": "good morning", "004": "thank you", "005": "please", "007": "goodbye", "055": "man"}
 TEST_SIGNERS = {"11"}

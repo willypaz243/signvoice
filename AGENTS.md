@@ -6,7 +6,8 @@ The plan and the stories live in `.backlog/` (`backlog.md`, `plan.md`, `stories/
 ## Context
 
 - **Project name: SignVoice** (repo `signvoice`). The name appears on the cover, README and
-  diagrams; the Python package is `g11` and is not renamed.
+  diagrams; the application package is `g11` (not renamed) and the layers are sibling
+  packages under `src/` (`features`, `language`, `data`, `vision`, `model`).
 - University AI practice: **sign recognition (LSM) and conversion to speech** with
   **supervised learning + computer vision**.
 - **3 deliverables.** Deliverable 1 (Nov 10, 2026) is report I. Introduction, II. Objectives,
@@ -68,15 +69,17 @@ signs · `glossary.yaml` + **deterministic templates** for gloss→Spanish · `p
 ## Structure (layered, ≤ 12 modules)
 
 Layers go **top → bottom**; modules only import from lower layers, never upward.
+Each layer is its own **package under `src/`** (`features/`, `language/`, `data/`,
+`vision/`, `model/`), sibling of the L5 application package `g11/`.
 
-| Layer | Modules | Role | Depends on |
-|---|---|---|---|
-| L5 · Application | `app` (incl. simulated predictor), `speak`, `__main__` | Gradio demo, voice, CLI | L0–L4 |
-| L4 · Model | `model`, `train` | GRU + attention, LOSO training, metrics | L0 |
-| L3 · Vision | `capture` | webcam → pose + hands (MediaPipe Tasks) | — |
-| L2 · Data | `dataset`, `catalog` | Espejel download + counts / gloss selection | — |
-| L1 · Language | `glossary`, `postprocess` | glosses → Spanish phrase (YAML data) | — |
-| L0 · Features | `landmarks`, `normalize` | (75, 3) stack → (32, 75, 3) torso-relative window | nothing (numpy) |
+| Layer | Package | Modules | Role | Depends on |
+|---|---|---|---|---|
+| L5 · Application | `g11/` | `app` (incl. simulated predictor), `speak`, `__main__` | Gradio demo, voice, CLI | L0–L4 |
+| L4 · Model | `model/` | `model`, `train` | GRU + attention, LOSO training, metrics | L0 |
+| L3 · Vision | `vision/` | `capture` | webcam → hands (MediaPipe Tasks) | — |
+| L2 · Data | `data/` | `dataset`, `catalog` | Espejel download + counts / gloss selection | — |
+| L1 · Language | `language/` | `glossary`, `postprocess` | glosses → Spanish phrase (YAML data) | — |
+| L0 · Features | `features/` | `landmarks`, `normalize` | (42, 3) stack → (32, 42, 3) wrist-relative window | nothing (numpy) |
 
 - **Steady state is exactly 12 modules.** Batch/one-shot jobs live in `scripts/`,
   not `src/`: dataset download, `.task`/voice download, landmark extraction
@@ -87,26 +90,27 @@ Layers go **top → bottom**; modules only import from lower layers, never upwar
 - **L0/L1/L2 are pure logic**: testable with `pytest` without camera, network, or GPU.
 - **When the real model ships (story 04):** `simulate` merges into `app` (single
   consumer; delete rule) in the same commit as `model.py` + `train.py`.
-- **`tests/` mirrors `src/` 1:1** (`test_<module>.py`), flat, no subpackages.
+- **`tests/` mirrors `src/` 1:1** (`test_<module>.py` in the matching package dir:
+  `tests/g11/`, `tests/features/`, `tests/language/`, `tests/data/`, `tests/vision/`).
 - **If a module grows:** over 60 lines split it (`model_gru.py`,
   `model_attention.py`); over 100, split or cut. If wiring the pipeline pushes
   `app` past 100, extract `pipeline.py` (L5, class `Pipeline`) and merge `speak`
   into `app` to stay at 12.
 
 ```
-src/g11/  app.py  speak.py  __main__.py            # L5
-          model.py  train.py                       # L4
-          capture.py                               # L3
-          dataset.py  catalog.py                   # L2
-          glossary.py  postprocess.py              # L1
-          landmarks.py  normalize.py               # L0
+src/      g11/  app.py  speak.py  simulate.py  __main__.py     # L5 application
+          model/ model.py  train.py                             # L4 model (story 04)
+          vision/ capture.py                                    # L3 vision
+          data/   catalog.py  dataset.py                        # L2 data
+          language/ glossary.py  postprocess.py                 # L1 language
+          features/ landmarks.py  normalize.py                  # L0 features
 glossary/ LSM.yaml
 models/   (downloaded, gitignored; see scripts/download_models.py)
 dataset/  (downloaded, gitignored)
           espejel/     Espejel CES 2024 images (see scripts/download_dataset.py)
           lsm_glosses/ LSM Glosses videos, candidate/future work (Zenodo 18330565)
 scripts/  download_models.py  download_dataset.py  extract_landmarks.py
-tests/    test_<module>.py (mirrors src/g11/)
+tests/    <pkg>/test_<module>.py (mirrors src/ 1:1)
 ```
 
 `pyproject.toml` with pinned dependencies (locked in `uv.lock`). One module per small

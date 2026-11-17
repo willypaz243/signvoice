@@ -9,7 +9,7 @@ import urllib.request
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
-from g11.catalog import Catalog
+from data.catalog import Catalog
 
 BASE = "https://data.mendeley.com/public-api/datasets/6rj76z6y3n"
 DOI = "10.17632/6rj76z6y3n.1"

@@ -2,9 +2,9 @@
 
 from pathlib import Path
 
-from g11.glossary import Glossary
+from language.glossary import Glossary
 
-ROOT = Path(__file__).resolve().parent.parent
+ROOT = Path(__file__).resolve().parent.parent.parent
 
 
 def test_glossary_loads_10_pilot_glosses():

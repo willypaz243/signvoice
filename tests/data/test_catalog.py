@@ -1,6 +1,6 @@
 """Tests for the pure Espejel catalog logic (splits LOSO)."""
 
-from g11.catalog import Catalog
+from data.catalog import Catalog
 
 CLIPS = [
     {"id": "01001", "signer": "01"},

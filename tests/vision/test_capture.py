@@ -2,7 +2,7 @@
 
 import numpy as np
 
-from g11.capture import Capture
+from vision.capture import Capture
 
 
 def test_capture_without_camera_detects_from_arrays():

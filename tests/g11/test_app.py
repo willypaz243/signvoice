@@ -4,7 +4,7 @@ from pathlib import Path
 
 from g11.app import DemoApp
 
-ROOT = Path(__file__).resolve().parent.parent
+ROOT = Path(__file__).resolve().parent.parent.parent
 
 
 def test_app_step_returns_phrase_and_simulated_flag():

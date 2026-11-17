@@ -9,7 +9,7 @@ import glob
 
 import cv2
 
-from g11.capture import Capture
+from vision.capture import Capture
 
 COUNT = 20
 

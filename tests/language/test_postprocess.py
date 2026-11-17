@@ -2,10 +2,10 @@
 
 from pathlib import Path
 
-from g11.glossary import Glossary
-from g11.postprocess import PhraseBuilder
+from language.glossary import Glossary
+from language.postprocess import PhraseBuilder
 
-ROOT = Path(__file__).resolve().parent.parent
+ROOT = Path(__file__).resolve().parent.parent.parent
 
 
 def _builder():

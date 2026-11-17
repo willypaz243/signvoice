@@ -8,7 +8,7 @@ Usage:
     python scripts/download_dataset.py
 """
 
-from g11.dataset import EspejelDataset
+from data.dataset import EspejelDataset
 
 ROOT = "dataset/espejel"
 

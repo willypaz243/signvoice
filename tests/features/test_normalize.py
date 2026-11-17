@@ -2,7 +2,7 @@
 
 import numpy as np
 
-from g11.normalize import Normalizer
+from features.normalize import Normalizer
 
 
 def _hand(start, rng):

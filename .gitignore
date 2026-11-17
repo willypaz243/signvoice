@@ -20,6 +20,8 @@ Thumbs.db
 
 # --- Datos y artefactos pesados: no van al repositorio ---
 data/
+# Excepción: src/data es el paquete de código L2, no datos de dataset
+!src/data/
 datasets/
 *.npz
 *.npy

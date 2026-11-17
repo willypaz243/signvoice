@@ -79,7 +79,7 @@ Cronograma, equipos y riesgos en `plan-entrega2.md`. *Cursiva* = stretch (solo s
 | 6 | Frase en español (glosario + plantillas + 3 frases de 3 glosas) | 2 | en curso (falta: YAML con las 10 glosas + frases de 3 glosas) | T2 | `stories/06-frase-en-espanol.md` |
 | 7 | Matriz de confusión | 2 | pendiente (con la 4) | T3 | `stories/07-matriz-de-confusion.md` |
 | 8‑11 | Confianza, máquina limpia, multi‑lengua, servidor | 3 | aplazada | — | — |
-| 12 | Informe V. Ingeniería (docx + PDF) | 2 | en curso (borrador MD listo; falta docx+PDF y las métricas de la 4) | T4 | — |
+| 12 | Informe V. Ingeniería (docx + PDF) | 2 | en curso (sección V actualizada con métricas reales; falta docx+PDF, OE5 y matriz OE7) | T4 | — |
 
 **Regla del hackathon:** cada historia cierra solo con `ruff check` + `pytest` en verde y un
 número o captura que entra al informe. Lo que no se entrena no se inventa en el informe.

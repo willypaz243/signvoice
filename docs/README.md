@@ -57,6 +57,8 @@ pandoc entrega1_informe.md -o entrega1.pdf --pdf-engine=xelatex -V geometry:marg
 > Los diagramas están en **Mermaid**. Para que salgan en el PDF impreso, exportarlos como imagen
 > (`npx @mermaid-js/mermaid-cli -i entrega1_informe.md -o figs/`) o pegar las capturas desde
 > <https://mermaid.live>. En la sección `04_arquitectura_propuesta.md` están las versiones editables.
+> Ojo: mermaid ≥11 envuelve las etiquetas a ~200 px (`flowchart.wrappingWidth`); añade
+> `%%{init: {'flowchart': {'wrappingWidth': 600}}}%%` al exportar o las cajas salen estrechas.
 
 ## Fuentes
 

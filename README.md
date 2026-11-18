@@ -13,8 +13,8 @@ español (`glossary.yaml` + plantillas deterministas) → **voz offline** (Piper
 Interfaz web con webcam (Gradio) y CLI (`typer`). Todo funciona **sin internet** en la demo.
 
 Alcance actual: **10 glosas** de señas aisladas, evaluadas con splits **LOSO** (por señante).
-Entrenamiento sobre el dataset público **LSM Glosses** (Zenodo, CC BY); Espejel CES 2024 queda
-como evidencia del spike. Sin experto en LSM en el grupo: las etiquetas vienen del dataset, el
+Entrenamiento sobre el dataset público **LSM Glosses** (Zenodo, CC BY). Sin experto en LSM
+en el grupo: las etiquetas vienen del dataset, el
 vocabulario de glosarios de referencia (GDLSM / FENAS / SIGNA) y el español lo valida un
 firmante externo.
 
@@ -29,7 +29,6 @@ Transformer encoder · Gradio · `typer` · Piper (voz offline) · config YAML �
 ```bash
 uv sync --all-groups
 python scripts/download_models.py      # una vez: voz piper + .task de MediaPipe
-python scripts/download_dataset.py     # una vez: Espejel (evidencia del spike)
 python scripts/download_lsm_glosses.py # una vez: LSM Glosses (entrenamiento)
 ruff check .
 ty check .
@@ -47,7 +46,7 @@ Capas de aplicación → datos (cada paquete solo importa de capas inferiores):
 | L5 · Aplicación | `src/g11/` | `app` · `speak` · `__main__` | Demo Gradio, voz offline, CLI |
 | L4 · Modelo | `src/model/` | `model` · `train` | Transformer encoder, entrenamiento LOSO |
 | L3 · Visión | `src/vision/` | `capture` | Webcam → *landmarks* (MediaPipe Tasks) |
-| L2 · Datos | `src/data/` | `dataset` · `catalog` | LSM Glosses / Espejel: carga y selección |
+| L2 · Datos | `src/data/` | `splits` | Splits **LOSO** por señante (lógica pura) |
 | L1 · Lenguaje | `src/language/` | `glossary` · `postprocess` | Glosas → frase en español (YAML) |
 | L0 · Características | `src/features/` | `landmarks` · `normalize` | Ventana `(32, 42, 3)` relativa a la muñeca |
 
@@ -55,7 +54,7 @@ Directorios de soporte:
 
 - `glossary/LSM.yaml` — vocabulario (10 glosas) como dato.
 - `models/` — `.task` de MediaPipe y voz Piper (versionados: demo sin internet).
-- `dataset/` — `espejel/` y `lsm_glosses/` (descargados, no versionados).
+- `dataset/` — `lsm_glosses/` (descargado, no versionado).
 - `scripts/` — descargas (modelos, datasets) y extracción de *landmarks*.
 - `tests/` — espejo 1:1 de `src/`.
 - `docs/informe/` — `entrega1_informe.md` y `entrega2_borrador.md` (el `.docx`/`.pdf` no se versiona).
@@ -74,6 +73,6 @@ dato): ver `AGENTS.md`.
 
 ## Licencia y datos
 
-Código con fines académicos. Los datasets públicos (Espejel CES 2024, LSM Glosses) se usan
-bajo **CC BY** y deben acreditarse; no se comitean datos, videos, landmarks ni pesos
+Código con fines académicos. El dataset público **LSM Glosses** se usa
+bajo **CC BY** y debe acreditarse; no se comitean datos, videos, landmarks ni pesos
 (`data/`, `*.npz`, `*.pt`).

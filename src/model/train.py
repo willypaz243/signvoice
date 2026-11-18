@@ -6,7 +6,7 @@ import time
 import numpy as np
 import torch
 
-from data.catalog import Catalog
+from data.splits import Splits
 from model.model import SignModel
 
 
@@ -49,7 +49,7 @@ class Trainer:
         by_id = {c["id"]: c for c in clips}
         out = {}
         for signer in sorted({c["signer"] for c in clips}):
-            split = Catalog.splits(clips, {signer})
+            split = Splits.losos(clips, {signer})
             out[signer] = {k: [by_id[i] for i in v] for k, v in split.items()}
         return out
 

@@ -1,1 +1,1 @@
-"""L2 data: dataset download, cataloging and gloss selection."""
+"""L2 data: pure LOSO split logic for signer-holdout evaluation."""

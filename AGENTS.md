@@ -26,7 +26,7 @@ The plan and the stories live in `.backlog/` (`backlog.md`, `plan.md`, `stories/
 Python 3.11 · PyTorch (**CUDA build**, pinned in `uv.lock`; CPU-only wheels are for
 machines without an NVIDIA GPU) ·
 MediaPipe **Tasks** Pose + Hands (local `.task` files) · dataset **LSM Glosses**
-(Zenodo 18330565, CC BY; Espejel kept as spike evidence) · **Transformer encoder**
+(Zenodo 18330565, CC BY) · **Transformer encoder**
 (4 layers, 128 dims, classification token) over **10 glosses** of **isolated**
 signs · `glossary.yaml` + **deterministic templates** for gloss→Spanish · `pyttsx3`
 (offline voice) · **Gradio** (webcam) + CLI `typer` · configuration in **YAML** ·
@@ -82,17 +82,18 @@ Each layer is its own **package under `src/`** (`features/`, `language/`, `data/
 | Layer | Package | Modules | Role | Depends on |
 |---|---|---|---|---|
 | L5 · Application | `g11/` | `app` (incl. simulated predictor), `speak`, `__main__` | Gradio demo, voice, CLI | L0–L4 |
-| L4 · Model | `model/` | `model`, `train` | GRU + attention, LOSO training, metrics | L0 |
+| L4 · Model | `model/` | `model`, `train` | Transformer encoder, LOSO training, metrics | L0 |
 | L3 · Vision | `vision/` | `capture` | webcam → hands (MediaPipe Tasks) | — |
-| L2 · Data | `data/` | `dataset`, `catalog` | Espejel download + counts / gloss selection | — |
+| L2 · Data | `data/` | `splits` | LOSO splits by signer (pure) | — |
 | L1 · Language | `language/` | `glossary`, `postprocess` | glosses → Spanish phrase (YAML data) | — |
 | L0 · Features | `features/` | `landmarks`, `normalize` | (42, 3) stack → (32, 42, 3) wrist-relative window | nothing (numpy) |
 
 - **Steady state is exactly 12 modules.** Batch/one-shot jobs live in `scripts/`,
   not `src/`: dataset download, `.task`/voice download, landmark extraction
-  (`scripts/extract_landmarks.py` reuses L3 + L0 classes; it never becomes a module).
+  (`scripts/extract_video_landmarks.py` reuses L3 + L0 classes; it never becomes
+  a module).
 - **One module = one business class**: `Capture`, `Landmarks`, `Normalizer`,
-  `Glossary`, `PhraseBuilder`, `Catalog`, `EspejelDataset`, `TtsVoice`, `DemoApp`,
+  `Glossary`, `PhraseBuilder`, `Splits`, `TtsVoice`, `DemoApp`,
   `SignModel`, `Trainer`.
 - **L0/L1/L2 are pure logic**: testable with `pytest` without camera, network, or GPU.
 - **When the real model ships (story 04):** `simulate` merges into `app` (single
@@ -108,15 +109,14 @@ Each layer is its own **package under `src/`** (`features/`, `language/`, `data/
 src/      g11/  app.py  speak.py  simulate.py  __main__.py     # L5 application
           model/ model.py  train.py                             # L4 model (story 04)
           vision/ capture.py                                    # L3 vision
-          data/   catalog.py  dataset.py                        # L2 data
+          data/   splits.py                                     # L2 data (LOSO)
           language/ glossary.py  postprocess.py                 # L1 language
           features/ landmarks.py  normalize.py                  # L0 features
 glossary/ LSM.yaml
 models/   (downloaded, gitignored; see scripts/download_models.py)
 dataset/  (downloaded, gitignored)
-          espejel/     Espejel CES 2024 images (see scripts/download_dataset.py)
-          lsm_glosses/ LSM Glosses videos, candidate/future work (Zenodo 18330565)
-scripts/  download_models.py  download_dataset.py  extract_landmarks.py
+          lsm_glosses/ LSM Glosses videos (Zenodo 18330565)
+scripts/  download_models.py  download_lsm_glosses.py  extract_video_landmarks.py
 tests/    <pkg>/test_<module>.py (mirrors src/ 1:1)
 ```
 
@@ -129,7 +129,6 @@ file: if a module grows beyond 60 lines, it is split (`model_gru.py`,
 ```bash
 uv sync --all-groups
 python scripts/download_models.py   # one-time: piper voice + MediaPipe .task
-python scripts/download_dataset.py   # one-time: Espejel dataset (2 GB) into dataset/espejel/
 python scripts/download_lsm_glosses.py  # one-time: LSM Glosses videos (2.7 GB) into dataset/lsm_glosses/
 ruff check .
 ty check .

@@ -11,7 +11,7 @@ from pathlib import Path
 import cv2
 import numpy as np
 
-from data.catalog import Catalog
+from data.splits import Splits
 from features.landmarks import Landmarks
 from features.normalize import Normalizer
 from vision.capture import Capture
@@ -132,7 +132,7 @@ def main():
 def _write_splits(out, ids):
     """Write splits.json with one LOSO fold per signer."""
     clips = [{"id": clip_id, "signer": clip_id.rsplit("_", 1)[1]} for clip_id in ids]
-    splits = {s: Catalog.splits(clips, {s}) for s in sorted({c["signer"] for c in clips})}
+    splits = {s: Splits.losos(clips, {s}) for s in sorted({c["signer"] for c in clips})}
     (out / "splits.json").write_text(json.dumps(splits, indent=2))
 
 

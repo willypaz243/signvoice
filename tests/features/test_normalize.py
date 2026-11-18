@@ -62,8 +62,8 @@ def test_normalize_keeps_missing_hand_at_zero():
 def test_normalize_returns_zeros_without_hands():
     """A frame where no hand was detected must normalize to zeros.
 
-    The Espejel images are dark and some frames show no hand at all;
-    feeding explicit zeros keeps the sequence shape stable for the GRU.
+    Some video frames show no hand at all; feeding explicit zeros keeps
+    the sequence shape stable for the model.
     """
     hands = np.zeros((1, 42, 3), dtype=np.float32)
     assert np.all(Normalizer().normalize(hands) == 0.0)
@@ -164,9 +164,9 @@ def test_resample_of_single_frame_repeats_it():
 def test_normalize_pads_window_to_32_frames():
     """Short clips must be padded to the fixed 32-frame model window.
 
-    The Espejel dataset provides roughly 13 frames per clip, so the
-    normalizer has to repeat the last frame until the sequence reaches
-    exactly (32, 42, 3) for the model input.
+    The LSM Glosses clips are short, so the normalizer has to repeat the
+    last frame until the sequence reaches exactly (32, 42, 3) for the
+    model input.
     """
     rng = np.random.default_rng(7)
     frame = np.concatenate([_hand([0.0, 0.0, 0.0], rng), _hand([5.0, 2.0, 0.0], rng)])

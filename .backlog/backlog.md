@@ -38,7 +38,7 @@ que ya funciona.
 | Lenguaje | **Python 3.11** |
 | Datos / experimentos | **PyTorch** (CPU; GPU+CUDA con versiones fijadas para el entrenamiento final) |
 | Landmarks | **MediaPipe Tasks**: Pose Landmarker + Hand Landmarker (`.task` locales, sin red) |
-| Dataset base | **LSM Glosses** (Zenodo 18330565, CC BY 4.0; Navarrete‑Lopez et al. 2026): 121 glosas en español, 1 415 videos, 12 señantes. Espejel (Mendeley) queda como evidencia del spike |
+| Dataset base | **LSM Glosses** (Zenodo 18330565, CC BY 4.0; Navarrete‑Lopez et al. 2026): 121 glosas en español, 1 415 videos, 12 señantes. Fuente única (Espejel descarta el 17/11; su código se elimina) |
 | Vocabulario | **10 glosas** (decisión 17/11): HOLA, SI, NO, GRACIAS, CASA, AMIGO, NOS_VEMOS, POR_FAVOR, DOCTOR, AYUDA — validadas en GDLSM/FENAMAS/SIGNA |
 | Modelo | **Transformer encoder** (4 capas, 128 dims, token de clasificación), salida softmax sobre las 10 glosas (reemplaza al GRU + atención, decisión 17/11) |
 | Post-proceso | **`glossary.yaml` + plantillas deterministas** (SVO, artículos, conjugación, marca de pregunta) |

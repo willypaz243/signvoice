@@ -24,6 +24,23 @@ Python 3.11 · PyTorch (build CUDA, fijado en `uv.lock`) · MediaPipe Tasks (`.t
 Transformer encoder · Gradio · `typer` · Piper (voz offline) · config YAML ·
 `ruff` + `ty` + `pytest`.
 
+## Instalación
+
+Instalar **`uv`** (trae Python 3.11 y gestiona el entorno; no hace falta instalar
+Python a mano). Guía completa para nuevos colaboradores: [`docs/contribuir.md`](docs/contribuir.md).
+
+**Windows** (PowerShell):
+
+```powershell
+powershell -c "irm https://astral.sh/uv/install.ps1 | iex"
+```
+
+**Linux / macOS** (bash):
+
+```bash
+curl -LsSf https://astral.sh/uv/install.sh | sh
+```
+
 ## Comandos
 
 ```bash
@@ -62,6 +79,12 @@ Directorios de soporte:
 
 Reglas de ingeniería (100 líneas por archivo, ≤ 12 módulos, funciones puras, idioma como
 dato): ver `AGENTS.md`.
+
+## Colaborar
+
+¿Quieres aportar? La guía completa para nuevos desarrolladores (qué instalar en
+Windows/Linux, cómo arrancar, cómo está construido y cómo se trabaja) está en
+[`docs/contribuir.md`](docs/contribuir.md).
 
 ## Entregas
 

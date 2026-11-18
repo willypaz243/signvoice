@@ -11,6 +11,7 @@ Problema: *Reconocimiento de señas y conversión a voz*
 ```
 docs/
 ├── README.md                          ← este archivo (índice)
+├── contribuir.md                      ← guía para nuevos colaboradores (instalar, arrancar, trabajar)
 ├── informe/
 │   └── entrega1_informe.md            ← BORRADOR DEL INFORME DE LA 1.ª ENTREGA (I-IV)
 └── investigacion/
